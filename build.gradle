@@ -1,0 +1,53 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'ru.vibelab'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.3'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.3'
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final' //hz
+
+    //lombok
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    //test
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    //Data Base
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa:2.6.3')
+    implementation('org.postgresql:postgresql:42.3.1')
+    implementation('javax.xml.bind:jaxb-api:2.4.0-b180830.0359')
+    implementation('com.sun.xml.bind:jaxb-core:3.0.1')
+    implementation('com.sun.xml.bind:jaxb-impl:3.0.1')
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.4.3'
+
+    //swagger
+    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+
+    //security
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.6.2'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '3.0.1'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
