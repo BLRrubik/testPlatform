@@ -23,6 +23,6 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "role")
-    private Set<UserRole> userRoles;
+    @ManyToMany(mappedBy = "roles")
+    Set<User> users;
 }

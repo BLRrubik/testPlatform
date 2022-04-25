@@ -26,9 +26,20 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    private Set<UserRole> userRoles;
+    @ManyToMany()
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    Set<Role> roles;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user")
     private Set<Test> tests;
+
+    @OneToMany(mappedBy = "user")
+    private Set<TestResult> testResults;
+
+    @OneToMany(mappedBy = "user")
+    private Set<QuestionResult> questionResults;
 }

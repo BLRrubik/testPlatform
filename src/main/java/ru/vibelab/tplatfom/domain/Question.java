@@ -9,12 +9,12 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "test")
+@Table(name = "question")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Test {
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,13 +23,16 @@ public class Test {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "solution")
+    private String solution;
+
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "test_id")
+    private Test test;
 
-    @OneToMany(mappedBy = "test")
-    private Set<Question> questions;
-
-    @OneToMany(mappedBy = "test")
-    private Set<TestResult> testResults;
+    @OneToMany(mappedBy = "question")
+    private Set<QuestionResult> questionResults;
 }

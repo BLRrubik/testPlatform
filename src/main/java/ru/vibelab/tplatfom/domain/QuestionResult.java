@@ -6,30 +6,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
-@Table(name = "test")
+@Table(name = "question")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Test {
+public class QuestionResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "answer")
+    private String answer;
+
+    @Column(name = "right")
+    private Boolean right;
+
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private Question question;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(mappedBy = "test")
-    private Set<Question> questions;
-
-    @OneToMany(mappedBy = "test")
-    private Set<TestResult> testResults;
 }
