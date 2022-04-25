@@ -4,17 +4,19 @@ server:
 server-url: 'http://localhost:8080'
 server-route:
 
-
 spring:
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/moodle'
-    username: 'postgres'
-    password: 'postgres'
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/moodle
+    username: postgres
+    password: postgres
   jpa:
-    generate-ddl: false
-    show-sql: false
+    generate-ddl: true
+    show-sql: true
     hibernate:
       ddl-auto: validate
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
   flyway:
     baselineOnMigrate: true
     locations: 'classpath:db.migration'
