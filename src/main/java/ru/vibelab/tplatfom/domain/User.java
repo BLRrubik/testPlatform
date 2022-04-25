@@ -28,4 +28,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<UserRole> userRoles;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<Test> tests;
 }
