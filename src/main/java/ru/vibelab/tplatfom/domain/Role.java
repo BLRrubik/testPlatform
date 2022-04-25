@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "role")
@@ -19,6 +20,9 @@ public class Role {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "role")
+    private Set<UserRole> userRoles;
 }
