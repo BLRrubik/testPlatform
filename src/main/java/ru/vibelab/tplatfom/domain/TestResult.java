@@ -20,7 +20,7 @@ public class TestResult {
     private Long id;
 
     @Column(name = "score")
-    private Integer score;
+    private Long score;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
