@@ -1,13 +1,8 @@
 package ru.vibelab.tplatfom.mappers;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.domain.Test;
-import ru.vibelab.tplatfom.domain.User;
-import ru.vibelab.tplatfom.repos.UserRepository;
 import ru.vibelab.tplatfom.requests.TestRequest;
-import ru.vibelab.tplatfom.services.UserService;
 
 import java.util.Set;
 import java.util.stream.Collectors;

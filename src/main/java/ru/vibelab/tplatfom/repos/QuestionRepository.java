@@ -6,4 +6,5 @@ import ru.vibelab.tplatfom.domain.Question;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
+    void deleteAllByTestId(Long id);
 }
