@@ -4,11 +4,11 @@ import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.requests.QuestionRequest;
 
 public class QuestionMapper {
-    public static Question fromDto(QuestionRequest dto) {
+    public static Question fromRequest(QuestionRequest request) {
         Question question = new Question();
-        question.setName(dto.getName());
-        question.setDescription(dto.getDescription());
-        question.setSolution(dto.getSolution());
+        question.setName(request.getName());
+        question.setDescription(request.getDescription());
+        question.setSolution(request.getSolution());
         return question;
     }
 }

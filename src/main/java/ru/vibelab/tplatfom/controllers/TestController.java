@@ -4,27 +4,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.domain.Test;
+import ru.vibelab.tplatfom.requests.QuestionAnswerRequest;
+import ru.vibelab.tplatfom.requests.QuestionRequest;
 import ru.vibelab.tplatfom.requests.TestRequest;
+import ru.vibelab.tplatfom.requests.UpdateTestRequest;
+import ru.vibelab.tplatfom.services.QuestionService;
 import ru.vibelab.tplatfom.services.TestService;
 
-import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/test")
 @RequiredArgsConstructor
-@Transactional
 public class TestController {
     @Autowired
     private final TestService testService;
+
+    @Autowired
+    private final QuestionService questionService;
 
     @GetMapping
     public ResponseEntity<List<Test>> getTests() {
@@ -32,40 +34,84 @@ public class TestController {
         return new ResponseEntity<>(tests, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Test> getTest(@PathVariable(name = "id") String id) {
+        Test test = testService.getById(Long.parseLong(id));
+        return new ResponseEntity<>(test, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<String> createTest(@RequestBody TestRequest test) throws URISyntaxException {
-        Long id = testService.createTest(test);
+        Long id = testService.create(test);
         return ResponseEntity.created(new URI(String.format("/api/test/%d", id))).build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Test> getTest(@PathVariable(name = "id") String id) {
-        Optional<Test> test = testService.getById(Long.parseLong(id));
-        if (test.isPresent()) {
-            return new ResponseEntity<>(test.get(), HttpStatus.OK);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
     @PostMapping("/{id}")
-    public ResponseEntity<Test> updateTest(@PathVariable(name = "id") String id, @RequestBody TestRequest test) {
-        try {
-            testService.updateTest(Long.parseLong(id), test);
-            return ResponseEntity.noContent().build();
-        } catch (NoSuchElementException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> updateTest(
+            @PathVariable(name = "id") String id,
+            @RequestBody UpdateTestRequest request
+    ) {
+        testService.updateTest(Long.parseLong(id), request);
+        return ResponseEntity.noContent().build();
     }
-
 
     @DeleteMapping("{id}")
     public ResponseEntity<Test> deleteTest(@PathVariable(name = "id") String id) {
-        try {
-            Test test = testService.delete(Long.parseLong(id));
-            return new ResponseEntity<>(test, HttpStatus.OK);
-        } catch (NoSuchElementException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        Test test = testService.delete(Long.parseLong(id));
+        return new ResponseEntity<>(test, HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/quest")
+    public ResponseEntity<List<Question>> getTestQuestions(@PathVariable(name = "id") String id) {
+        Test test = testService.getById(Long.parseLong(id));
+        List<Question> questions = questionService.getAllByTestId(test.getId());
+        return new ResponseEntity<>(questions, HttpStatus.OK);
+    }
+
+    @PostMapping("{id}/quest")
+    public ResponseEntity<String> createQuestion(
+            @PathVariable(name = "id") String id,
+            @RequestBody QuestionRequest request
+    ) throws URISyntaxException {
+        Long test_id = Long.parseLong(id);
+        Long question_id = questionService.create(test_id, request);
+        return ResponseEntity.created(
+                new URI(String.format("/api/test/%d/quest/%d", test_id, question_id))
+        ).build();
+    }
+
+    @GetMapping("{test_id}/quest/{quest_id}")
+    public ResponseEntity<Question> getQuestion(
+            @PathVariable(name = "test_id") String testId,
+            @PathVariable(name = "quest_id") String questId
+    ) {
+        // TODO: Зачем знать test_id?
+        Question question = questionService.getById(Long.parseLong(questId));
+        return new ResponseEntity<>(question, HttpStatus.OK);
+    }
+
+    @DeleteMapping("{test_id}/quest/{quest_id}")
+    public ResponseEntity<Question> deleteQuestion(
+            @PathVariable(name = "test_id") String testId,
+            @PathVariable(name = "quest_id") String questId
+    ) {
+        // TODO: Зачем знать test_id?
+        Question question = questionService.delete(Long.parseLong(questId));
+        return new ResponseEntity<>(question, HttpStatus.OK);
+    }
+
+    @PostMapping("{test_id}/quest/{quest_id}")
+    public ResponseEntity<String> answerQuestion(
+            @PathVariable(name = "test_id") String testId,
+            @PathVariable(name = "quest_id") String questId,
+            @RequestBody QuestionAnswerRequest request
+    ) throws URISyntaxException {
+        // TODO: Здесь не нужет test_id
+        // TODO: Проверять правильность ответа, возращать результат
+        // TODO: Добавить User
+        Long answerId = questionService.answerQuestion(Long.parseLong(questId), request);
+        return ResponseEntity.created(
+                new URI(String.format("/api/test/%s/quest/%d", testId, answerId))
+        ).build();
     }
 }

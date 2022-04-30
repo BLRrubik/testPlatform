@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -30,6 +32,7 @@ public class Test {
     private User user;
 
     @OneToMany(mappedBy = "test")
+    @Fetch(FetchMode.JOIN)
     @JsonManagedReference
     private Set<Question> questions;
 

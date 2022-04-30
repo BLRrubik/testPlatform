@@ -22,7 +22,7 @@ public class QuestionResult {
     @Column(name = "answer")
     private String answer;
 
-    @Column(name = "right")
+    @Column(name = "\"right\"")
     private Boolean right;
 
     @ManyToOne

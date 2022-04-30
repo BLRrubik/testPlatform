@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TestMapper {
-    public static Test fromDto(TestRequest dto) {
+    public static Test fromRequest(TestRequest dto) {
         Test test = new Test();
         test.setName(dto.getName());
 
@@ -16,7 +16,7 @@ public class TestMapper {
 
         Set<Question> questions = dto.getQuestions()
                 .stream()
-                .map(QuestionMapper::fromDto)
+                .map(QuestionMapper::fromRequest)
                 .collect(Collectors.toSet());
         test.setQuestions(questions);
 
