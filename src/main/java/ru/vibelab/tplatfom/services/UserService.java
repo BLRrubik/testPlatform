@@ -2,10 +2,17 @@ package ru.vibelab.tplatfom.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.vibelab.tplatfom.DTO.test.TestDTO;
+import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
+import ru.vibelab.tplatfom.DTO.user.UserDTO;
+import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
 import ru.vibelab.tplatfom.domain.User;
 import ru.vibelab.tplatfom.exceptions.users.UserNotFoundException;
+import ru.vibelab.tplatfom.mappers.TestMapper;
+import ru.vibelab.tplatfom.mappers.TestResultMapper;
+import ru.vibelab.tplatfom.mappers.UserMapper;
 import ru.vibelab.tplatfom.repos.UserRepo;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 
@@ -18,13 +25,13 @@ public class UserService {
     @Autowired
     private UserRepo userRepo;
 
-    public Set<UserDTO> getAllUsers() {
+    public Set<UserShortDTO> getAllUsers() {
         List<User> users = userRepo.findAll();
-        return users.stream().map(UserMapper::fromEntityToDTO).collect(Collectors.toSet());
+        return UserMapper.fromUsersToShortDTOs(users);
     }
 
     public UserDTO getUser(Long id) {
-        return UserMapper.fromEntityToDTO(userRepo.findById(id).orElseThrow(
+        return UserMapper.fromUserToDTO(userRepo.findById(id).orElseThrow(
                 () -> new UserNotFoundException("No user with id: " + id))
         );
     }
@@ -33,9 +40,9 @@ public class UserService {
         User user = userRepo.findById(id).orElseThrow(
                 () -> new UserNotFoundException("No user with id: " + id)
         );
-        UserMapper.fromUpdateRequestToEntity(user, request);
+        UserMapper.fromUpdateRequestToUser(user, request);
         userRepo.save(user);
-        return UserMapper.fromEntityToDTO(user);
+        return UserMapper.fromUserToDTO(user);
     }
 
     public void deleteUser(Long id) {
@@ -44,17 +51,17 @@ public class UserService {
         ));
     }
 
-    public Set<TestDTO> getUserTests(Long id) {
-        Set<Test> tests = userRepo.findById(id).orElseThrow(
+    public List<TestDTO> getUserTests(Long id) {
+        List<Test> tests = List.copyOf(userRepo.findById(id).orElseThrow(
                 () -> new UserNotFoundException("No user with id: " + id)
-        ).getTests();
-        return tests.stream().map(TestMapper::fromEntityToDto).collect(Collectors.toSet());
+        ).getTests());
+        return TestMapper.fromTestsToDTOs(tests);
     }
 
-    public Set<TestResultDTO> getUserResults(Long id) {
-        Set<TestResult> results = userRepo.findById(id).orElseThrow(
+    public List<TestResultDTO> getUserResults(Long id) {
+        List<TestResult> results = List.copyOf(userRepo.findById(id).orElseThrow(
                 () -> new UserNotFoundException("No user with id: " + id)
-        ).getTestResults();
-        return results.stream().map(TestResultMapper::fromEntityToDto).collect(Collectors.toSet());
+        ).getTestResults());
+        return TestResultMapper.fromTestsResultsToDTOs(results);
     }
 }

@@ -3,6 +3,7 @@ package ru.vibelab.tplatfom.mappers;
 import ru.vibelab.tplatfom.DTO.user.UserDTO;
 import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
 import ru.vibelab.tplatfom.domain.User;
+import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 
 import java.util.List;
 import java.util.Set;
