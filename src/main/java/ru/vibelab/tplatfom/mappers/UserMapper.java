@@ -1,7 +1,7 @@
 package ru.vibelab.tplatfom.mappers;
 
-import ru.vibelab.tplatfom.DTO.UserDTO;
-import ru.vibelab.tplatfom.DTO.UserShortDTO;
+import ru.vibelab.tplatfom.DTO.user.UserDTO;
+import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
 import ru.vibelab.tplatfom.domain.User;
 
 import java.util.List;

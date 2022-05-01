@@ -1,6 +1,6 @@
 package ru.vibelab.tplatfom.mappers;
 
-import ru.vibelab.tplatfom.DTO.TestResultDTO;
+import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.domain.TestResult;
 
 import java.util.List;

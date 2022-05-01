@@ -1,4 +1,4 @@
-package ru.vibelab.tplatfom.DTO;
+package ru.vibelab.tplatfom.DTO.test;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

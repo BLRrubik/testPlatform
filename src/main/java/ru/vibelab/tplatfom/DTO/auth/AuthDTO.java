@@ -1,17 +1,16 @@
-package ru.vibelab.tplatfom.DTO;
+package ru.vibelab.tplatfom.DTO.auth;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class AuthDTO {
     private String username;
     private String token;
     private String status;
-
-    public AuthDTO(String status) {
-        this.status = status;
-    }
-
 }
