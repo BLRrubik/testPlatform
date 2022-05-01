@@ -6,17 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
-import ru.vibelab.tplatfom.domain.User;
 import ru.vibelab.tplatfom.exceptions.notfound.TestNotFoundException;
-import ru.vibelab.tplatfom.exceptions.notfound.UserNotFoundException;
+import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.repos.QuestionRepository;
+import ru.vibelab.tplatfom.repos.TestRepository;
 import ru.vibelab.tplatfom.repos.TestResultRepository;
 import ru.vibelab.tplatfom.repos.UserRepository;
 import ru.vibelab.tplatfom.requests.TestRequest;
-import ru.vibelab.tplatfom.mappers.TestMapper;
-import ru.vibelab.tplatfom.repos.TestRepository;
 import ru.vibelab.tplatfom.requests.UpdateTestRequest;
-import ru.vibelab.tplatfom.requests.UserRequest;
 
 import java.util.List;
 

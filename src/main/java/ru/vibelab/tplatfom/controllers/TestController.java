@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.domain.Question;
-import ru.vibelab.tplatfom.domain.QuestionResult;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
 import ru.vibelab.tplatfom.requests.*;
