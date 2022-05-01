@@ -11,8 +11,6 @@ import ru.vibelab.tplatfom.domain.User;
 import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.mappers.TestResultMapper;
 import ru.vibelab.tplatfom.mappers.UserMapper;
-import ru.vibelab.tplatfom.repos.TestRepo;
-import ru.vibelab.tplatfom.repos.TestResultRepo;
 import ru.vibelab.tplatfom.repos.UserRepo;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 
@@ -24,12 +22,6 @@ import java.util.stream.Collectors;
 public class UserService {
     @Autowired
     private UserRepo userRepo;
-
-    @Autowired
-    private TestRepo testRepo;
-
-    @Autowired
-    private TestResultRepo testResultRepo;
 
     public Set<UserDTO> getAllUsers() {
         List<User> users = userRepo.findAll();
@@ -52,12 +44,12 @@ public class UserService {
     }
 
     public Set<TestDTO> getUserTests(Long id) {
-        List<Test> tests = testRepo.findAllByUser(userRepo.findById(id).get());
+        Set<Test> tests = userRepo.findById(id).get().getTests();
         return tests.stream().map(TestMapper::fromEntityToDto).collect(Collectors.toSet());
     }
 
     public Set<TestResultDTO> getUserResults(Long id) {
-        List<TestResult> results = testResultRepo.findAllByUser(userRepo.findById(id).get());
+        Set<TestResult> results = userRepo.findById(id).get().getTestResults();
         return results.stream().map(TestResultMapper::fromEntityToDto).collect(Collectors.toSet());
     }
 }
