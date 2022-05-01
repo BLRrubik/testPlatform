@@ -35,4 +35,12 @@ public class UserMapper {
                 .map(UserMapper::fromUserToShortDTO)
                 .collect(Collectors.toSet());
     }
+
+    public static void fromUpdateRequestToUser(User user, UserUpdateRequest request) {
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+        user.setRoles(request.getRoles());
+        user.setTestResults(request.getTestResults());
+        user.setQuestionResults(request.getQuestionResults());
+    }
 }
