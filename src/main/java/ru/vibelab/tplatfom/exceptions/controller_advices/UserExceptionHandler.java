@@ -1,11 +1,11 @@
-package ru.vibelab.tplatfom.handlers;
+package ru.vibelab.tplatfom.exceptions.controller_advices;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.vibelab.tplatfom.DTO.ExceptionDTO;
-import ru.vibelab.tplatfom.exceptions.UserNotFoundException;
+import ru.vibelab.tplatfom.exceptions.users.UserNotFoundException;
 
 import java.time.LocalDateTime;
 
