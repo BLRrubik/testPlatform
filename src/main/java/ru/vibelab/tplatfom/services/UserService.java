@@ -8,7 +8,7 @@ import ru.vibelab.tplatfom.DTO.UserDTO;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
 import ru.vibelab.tplatfom.domain.User;
-import ru.vibelab.tplatfom.exceptions.UserNotFoundException;
+import ru.vibelab.tplatfom.exceptions.users.UserNotFoundException;
 import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.mappers.TestResultMapper;
 import ru.vibelab.tplatfom.mappers.UserMapper;

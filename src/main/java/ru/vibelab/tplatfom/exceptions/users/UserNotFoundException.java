@@ -1,4 +1,4 @@
-package ru.vibelab.tplatfom.exceptions;
+package ru.vibelab.tplatfom.exceptions.users;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {
