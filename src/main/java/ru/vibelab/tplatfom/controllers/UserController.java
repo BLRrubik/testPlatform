@@ -11,7 +11,7 @@ import ru.vibelab.tplatfom.services.UserService;
 import java.util.Optional;
 import java.util.Set;
 
-@RestController()
+@RestController
 @RequestMapping("/api/users/")
 public class UserController {
     @Autowired
