@@ -6,5 +6,4 @@ import ru.vibelab.tplatfom.domain.Test;
 
 @Repository
 public interface TestRepository extends JpaRepository<Test, Long> {
-
 }

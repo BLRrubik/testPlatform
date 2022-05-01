@@ -1,5 +1,6 @@
 package ru.vibelab.tplatfom.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,6 @@ public class TestResult {
 
     @ManyToOne
     @JoinColumn(name = "test_id")
+    @JsonIgnore
     private Test test;
 }

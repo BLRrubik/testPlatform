@@ -7,8 +7,8 @@ import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.domain.QuestionResult;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.User;
-import ru.vibelab.tplatfom.exceptions.QuestionNotFoundException;
-import ru.vibelab.tplatfom.exceptions.TestNotFoundException;
+import ru.vibelab.tplatfom.exceptions.notfound.QuestionNotFoundException;
+import ru.vibelab.tplatfom.exceptions.notfound.TestNotFoundException;
 import ru.vibelab.tplatfom.mappers.QuestionMapper;
 import ru.vibelab.tplatfom.repos.QuestionRepository;
 import ru.vibelab.tplatfom.repos.QuestionResultRepository;
@@ -35,9 +35,7 @@ public class QuestionService {
     private final UserRepository userRepository;
 
     public Question getById(Long id) {
-        return questionRepository.findById(id).orElseThrow(
-                () -> new QuestionNotFoundException(id)
-        );
+        return questionRepository.findById(id).orElseThrow(() -> new QuestionNotFoundException(id));
     }
 
     public List<Question> getAllByTestId(Long id) {
@@ -71,5 +69,13 @@ public class QuestionService {
         result.setUser(user);
 
         return questionResultRepository.save(result).getId();
+    }
+
+    public Question updateQuestion(Long questionId, QuestionRequest request) {
+        Question question = getById(questionId);
+        question.setName(request.getName());
+        question.setDescription(request.getDescription());
+        question.setSolution(request.getSolution());
+        return questionRepository.save(question);
     }
 }

@@ -6,11 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.domain.Question;
+import ru.vibelab.tplatfom.domain.QuestionResult;
 import ru.vibelab.tplatfom.domain.Test;
-import ru.vibelab.tplatfom.requests.QuestionAnswerRequest;
-import ru.vibelab.tplatfom.requests.QuestionRequest;
-import ru.vibelab.tplatfom.requests.TestRequest;
-import ru.vibelab.tplatfom.requests.UpdateTestRequest;
+import ru.vibelab.tplatfom.domain.TestResult;
+import ru.vibelab.tplatfom.requests.*;
 import ru.vibelab.tplatfom.services.QuestionService;
 import ru.vibelab.tplatfom.services.TestService;
 
@@ -55,20 +54,25 @@ public class TestController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Test> deleteTest(@PathVariable(name = "id") String id) {
         Test test = testService.delete(Long.parseLong(id));
         return new ResponseEntity<>(test, HttpStatus.OK);
     }
 
-    @GetMapping("{id}/quest")
+    @GetMapping("/{id}/testresults")
+    public ResponseEntity<List<TestResult>> getResults(@PathVariable(name = "id") String id) {
+        return new ResponseEntity<>(testService.getTestResults(Long.parseLong(id)), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/quest")
     public ResponseEntity<List<Question>> getTestQuestions(@PathVariable(name = "id") String id) {
         Test test = testService.getById(Long.parseLong(id));
         List<Question> questions = questionService.getAllByTestId(test.getId());
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
 
-    @PostMapping("{id}/quest")
+    @PostMapping("/{id}/quest")
     public ResponseEntity<String> createQuestion(
             @PathVariable(name = "id") String id,
             @RequestBody QuestionRequest request
@@ -80,38 +84,59 @@ public class TestController {
         ).build();
     }
 
-    @GetMapping("{test_id}/quest/{quest_id}")
+    @GetMapping("/{test_id}/quest/{quest_id}")
     public ResponseEntity<Question> getQuestion(
             @PathVariable(name = "test_id") String testId,
             @PathVariable(name = "quest_id") String questId
     ) {
-        // TODO: Зачем знать test_id?
+        // TODO: testId лишний?
         Question question = questionService.getById(Long.parseLong(questId));
         return new ResponseEntity<>(question, HttpStatus.OK);
     }
 
-    @DeleteMapping("{test_id}/quest/{quest_id}")
+    @DeleteMapping("/{test_id}/quest/{quest_id}")
     public ResponseEntity<Question> deleteQuestion(
             @PathVariable(name = "test_id") String testId,
             @PathVariable(name = "quest_id") String questId
     ) {
-        // TODO: Зачем знать test_id?
+        // TODO: testId лишний?
         Question question = questionService.delete(Long.parseLong(questId));
         return new ResponseEntity<>(question, HttpStatus.OK);
     }
 
-    @PostMapping("{test_id}/quest/{quest_id}")
+    @PostMapping("/{test_id}/quest/{quest_id}")
     public ResponseEntity<String> answerQuestion(
             @PathVariable(name = "test_id") String testId,
             @PathVariable(name = "quest_id") String questId,
             @RequestBody QuestionAnswerRequest request
     ) throws URISyntaxException {
-        // TODO: Здесь не нужет test_id
+        // TODO: testId лишний?
         // TODO: Проверять правильность ответа, возращать результат
         // TODO: Добавить User
         Long answerId = questionService.answerQuestion(Long.parseLong(questId), request);
         return ResponseEntity.created(
                 new URI(String.format("/api/test/%s/quest/%d", testId, answerId))
         ).build();
+    }
+
+    @PostMapping("/{test_id}/quest/{quest_id}/edit")
+    public ResponseEntity<Question> updateQuestion(
+            @PathVariable(name = "test_id") String testId,
+            @PathVariable(name = "quest_id") String questId,
+            @RequestBody QuestionRequest request
+    ) {
+        // TODO: testId лишний?
+        Question question = questionService.updateQuestion(Long.parseLong(questId), request);
+        return new ResponseEntity<>(question, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/users")
+    public ResponseEntity<List<TestResult>> userResults(
+            @PathVariable(name = "id") String id,
+            @RequestBody UserRequest request
+    ) {
+        // TODO: testId лишний?
+        List<TestResult> results = testService.getUserResults(Long.parseLong(id), request.getId());
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 }

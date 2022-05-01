@@ -14,8 +14,7 @@ public class TestMapper {
 
         // TODO: test.setUser(dto.getUser());
 
-        Set<Question> questions = dto.getQuestions()
-                .stream()
+        Set<Question> questions = dto.getQuestions().stream()
                 .map(QuestionMapper::fromRequest)
                 .collect(Collectors.toSet());
         test.setQuestions(questions);
