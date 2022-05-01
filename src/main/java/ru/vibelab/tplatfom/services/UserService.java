@@ -2,16 +2,10 @@ package ru.vibelab.tplatfom.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.vibelab.tplatfom.DTO.TestDTO;
-import ru.vibelab.tplatfom.DTO.TestResultDTO;
-import ru.vibelab.tplatfom.DTO.UserDTO;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
 import ru.vibelab.tplatfom.domain.User;
 import ru.vibelab.tplatfom.exceptions.users.UserNotFoundException;
-import ru.vibelab.tplatfom.mappers.TestMapper;
-import ru.vibelab.tplatfom.mappers.TestResultMapper;
-import ru.vibelab.tplatfom.mappers.UserMapper;
 import ru.vibelab.tplatfom.repos.UserRepo;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 

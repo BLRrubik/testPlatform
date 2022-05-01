@@ -3,8 +3,6 @@ package ru.vibelab.tplatfom.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.vibelab.tplatfom.DTO.TestResultDTO;
-import ru.vibelab.tplatfom.DTO.UserDTO;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 import ru.vibelab.tplatfom.services.UserService;
 
