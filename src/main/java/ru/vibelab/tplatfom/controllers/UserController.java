@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.user.UserDTO;
 import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
+import ru.vibelab.tplatfom.requests.UserDeleteRequest;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 import ru.vibelab.tplatfom.services.UserService;
 
@@ -25,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+    public ResponseEntity<UserShortDTO> getUser(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(userService.getUser(id)));
     }
 
@@ -35,8 +36,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public void deleteUser(@RequestBody UserDeleteRequest request) {
+        userService.deleteUser(request);
     }
 
 //    @GetMapping("/test")

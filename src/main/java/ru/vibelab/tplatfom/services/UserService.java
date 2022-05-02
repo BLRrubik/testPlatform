@@ -14,6 +14,7 @@ import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.mappers.TestResultMapper;
 import ru.vibelab.tplatfom.mappers.UserMapper;
 import ru.vibelab.tplatfom.repos.UserRepo;
+import ru.vibelab.tplatfom.requests.UserDeleteRequest;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class UserService {
         return UserMapper.fromUsersToShortDTOs(users);
     }
 
-    public UserDTO getUser(Long id) {
-        return UserMapper.fromUserToDTO(userRepo.findById(id).orElseThrow(
+    public UserShortDTO getUser(Long id) {
+        return UserMapper.fromUserToShortDTO(userRepo.findById(id).orElseThrow(
                 () -> new UserNotFoundException("No user with id: " + id))
         );
     }
@@ -45,7 +46,8 @@ public class UserService {
         return UserMapper.fromUserToDTO(user);
     }
 
-    public void deleteUser(Long id) {
+    public void deleteUser(UserDeleteRequest request) {
+        Long id = request.getId();
         userRepo.delete(userRepo.findById(id).orElseThrow(
                 () -> new UserNotFoundException("No user with id: " + id)
         ));
