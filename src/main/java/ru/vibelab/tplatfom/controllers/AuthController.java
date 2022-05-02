@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.vibelab.tplatfom.DTO.UserAuthDTO;
-import ru.vibelab.tplatfom.DTO.UserRegistrationDTO;
+import ru.vibelab.tplatfom.DTO.auth.AuthDTO;
+import ru.vibelab.tplatfom.DTO.auth.RegistrationDTO;
 import ru.vibelab.tplatfom.requests.RegistrationRequest;
 import ru.vibelab.tplatfom.services.AuthService;
 import ru.vibelab.tplatfom.services.RegistrationService;
@@ -25,7 +25,7 @@ public class AuthController {
 
 
     @PostMapping("/api/auth/login")
-    public UserAuthDTO token(Authentication authentication) {
+    public AuthDTO token(Authentication authentication) {
         return authService.authUser(authentication);
     }
 
@@ -40,7 +40,7 @@ public class AuthController {
 
     @ApiOperation(value = "Регистрация пользователя")
     @PostMapping("/api/auth/register")
-    public UserRegistrationDTO registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {
+    public RegistrationDTO registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {
 
         return registrationService.registerUser(registrationRequest);
     }

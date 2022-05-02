@@ -2,7 +2,7 @@ package ru.vibelab.tplatfom.security;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class PasswordEnconderTest implements PasswordEncoder {
+public class PasswordEncoderStringEquality implements PasswordEncoder {
     @Override
     public String encode(CharSequence charSequence) {
         return charSequence.toString();

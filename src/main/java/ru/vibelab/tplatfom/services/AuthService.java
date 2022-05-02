@@ -7,20 +7,17 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
-import ru.vibelab.tplatfom.DTO.UserAuthDTO;
+import ru.vibelab.tplatfom.DTO.auth.AuthDTO;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
-
-
     @Autowired
     JwtEncoder encoder;
 
-    public UserAuthDTO authUser(Authentication authentication){
-
+    public AuthDTO authUser(Authentication authentication){
         Instant now = Instant.now();
         long expiry = 36000L;
         // @formatter:off
@@ -37,8 +34,7 @@ public class AuthService {
                 .build();
         System.out.println(claims);
         // @formatter:on
-        return new UserAuthDTO(authentication.getName(), this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue());
-
+        return new AuthDTO(authentication.getName(), this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), "OK");
     }
 
 }

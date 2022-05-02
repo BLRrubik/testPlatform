@@ -2,7 +2,7 @@ package ru.vibelab.tplatfom.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.vibelab.tplatfom.DTO.UserRegistrationDTO;
+import ru.vibelab.tplatfom.DTO.auth.RegistrationDTO;
 import ru.vibelab.tplatfom.domain.User;
 import ru.vibelab.tplatfom.domain.UserRole;
 import ru.vibelab.tplatfom.repos.RoleRepo;
@@ -21,12 +21,12 @@ public class RegistrationService {
 
     @Autowired
     public UserRoleRepo userRoleRepo;
-    public UserRegistrationDTO registerUser(@Valid RegistrationRequest registrationRequest) {
+    public RegistrationDTO registerUser(@Valid RegistrationRequest registrationRequest) {
 
         User user = userRepo.findUserByUsername(registrationRequest.getUsername());
 
         if (user != null) {
-            return new UserRegistrationDTO("Username already taken", "");
+            return new RegistrationDTO("Username already taken");
         }
         User createUser = new User();
         createUser.setUsername(registrationRequest.getUsername());
@@ -38,6 +38,6 @@ public class RegistrationService {
         userRole.setRole_id(1L); //Student
         System.out.println(createUser);
         userRoleRepo.save(userRole);
-        return new UserRegistrationDTO(registrationRequest.getUsername(), "Succesful registred");
+        return new RegistrationDTO("OK");
     }
 }
