@@ -75,7 +75,7 @@ public class RestConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new PasswordEnconderTest();
+        return new PasswordEncoderStringEquality();
     }
 
 
