@@ -42,7 +42,7 @@ public class TestService {
 
     public List<TestResult> getTestResults(Long id) {
         Test test = getById(id);
-        return testResultRepository.findAllByTestId(id);
+        return testResultRepository.findAllByTest(test);
     }
 
     public Long create(TestRequest request) {
@@ -69,13 +69,13 @@ public class TestService {
     @Transactional
     public Test delete(Long id) {
         Test test = getById(id);
-        questionRepository.deleteAllByTestId(id);
+        questionRepository.deleteAllByTest(test);
         testRepository.delete(test);
         return test;
     }
 
     public List<TestResult> getUserResults(Long testId, Long userId) {
         Test test = getById(testId);
-        return testResultRepository.findAllByUserId(userId);  // TODO: Переделать
+        return testResultRepository.findAllByUser(null);  // TODO: Переделать
     }
 }

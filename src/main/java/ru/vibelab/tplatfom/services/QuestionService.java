@@ -38,14 +38,17 @@ public class QuestionService {
         return questionRepository.findById(id).orElseThrow(() -> new QuestionNotFoundException(id));
     }
 
+    private Test getTestById(Long id) {
+        return testRepository.findById(id).orElseThrow(() -> new TestNotFoundException(id));
+    }
+
     public List<Question> getAllByTestId(Long id) {
-        return questionRepository.findAllByTestId(id);
+        Test test = getTestById(id);
+        return questionRepository.findAllByTest(test);
     }
 
     public Long create(Long testId, QuestionRequest request) {
-        Test test = testRepository.findById(testId).orElseThrow(
-                () -> new TestNotFoundException(testId)
-        );
+        Test test = getTestById(testId);
         Question question = QuestionMapper.fromRequest(request);
         question.setTest(test);
         return questionRepository.save(question).getId();
