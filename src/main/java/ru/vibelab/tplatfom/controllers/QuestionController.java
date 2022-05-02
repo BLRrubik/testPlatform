@@ -11,12 +11,23 @@ import ru.vibelab.tplatfom.requests.QuestionAnswerRequest;
 import ru.vibelab.tplatfom.requests.QuestionRequest;
 import ru.vibelab.tplatfom.services.QuestionService;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 @RestController
 @RequestMapping("/api/quest")
 @RequiredArgsConstructor
 public class QuestionController {
     @Autowired
     private final QuestionService questionService;
+
+    @PostMapping()
+    public ResponseEntity<String> createQuestion(@RequestBody QuestionRequest request) throws URISyntaxException {
+        Long id = questionService.create(request);
+        return ResponseEntity.created(
+                new URI(String.format("/api/quest/%d", id))
+        ).build();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<QuestionDTO> getQuestion(@PathVariable(name = "id") String id) {

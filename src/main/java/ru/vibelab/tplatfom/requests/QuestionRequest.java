@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionRequest {
+    private Long test;
     private String name;
     private String description;
     private String solution;

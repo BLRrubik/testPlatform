@@ -76,16 +76,4 @@ public class TestController {
         List<QuestionDTO> questions = questionService.getAllByTest(test);
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
-
-    @PostMapping("/{id}/quest")
-    public ResponseEntity<String> createQuestion(
-            @PathVariable(name = "id") String id,
-            @RequestBody QuestionRequest request
-    ) throws URISyntaxException {
-        Long test_id = Long.parseLong(id);
-        Long question_id = questionService.create(test_id, request);
-        return ResponseEntity.created(
-                new URI(String.format("/api/test/%d/quest/%d", test_id, question_id))
-        ).build();
-    }
 }

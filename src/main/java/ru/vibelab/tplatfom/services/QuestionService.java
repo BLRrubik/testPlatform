@@ -55,8 +55,8 @@ public class QuestionService {
                 .collect(Collectors.toList());
     }
 
-    public Long create(Long testId, QuestionRequest request) {
-        Test test = getTestById(testId);
+    public Long create(QuestionRequest request) {
+        Test test = getTestById(request.getTest());
         Question question = QuestionMapper.fromRequestToQuestion(request);
         question.setTest(test);
         return questionRepository.save(question).getId();
