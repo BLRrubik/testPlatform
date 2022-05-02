@@ -10,9 +10,8 @@ import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestResultDTO {
+public class TestShortDTO {
     private Long id;
-    private Long score;
-    private TestShortDTO test;
+    private String name;
     private UserShortDTO user;
 }

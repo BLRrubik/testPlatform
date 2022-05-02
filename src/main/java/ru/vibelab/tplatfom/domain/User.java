@@ -1,7 +1,5 @@
 package ru.vibelab.tplatfom.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +24,8 @@ public class User {
     private String username;
 
     @Column(name = "password")
-    @JsonIgnore
     private String password;
 
-    @JsonIgnore
     @ManyToMany()
     @JoinTable(
             name = "user_role",
@@ -39,14 +35,11 @@ public class User {
     Set<Role> roles;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
     private Set<Test> tests;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
     private Set<TestResult> testResults;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
     private Set<QuestionResult> questionResults;
 }

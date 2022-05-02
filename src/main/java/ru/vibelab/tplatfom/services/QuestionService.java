@@ -3,12 +3,13 @@ package ru.vibelab.tplatfom.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.vibelab.tplatfom.DTO.question.QuestionDTO;
 import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.domain.QuestionResult;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.User;
-import ru.vibelab.tplatfom.exceptions.notfound.QuestionNotFoundException;
-import ru.vibelab.tplatfom.exceptions.notfound.TestNotFoundException;
+import ru.vibelab.tplatfom.exceptions.question.QuestionNotFoundException;
+import ru.vibelab.tplatfom.exceptions.test.TestNotFoundException;
 import ru.vibelab.tplatfom.mappers.QuestionMapper;
 import ru.vibelab.tplatfom.repos.QuestionRepository;
 import ru.vibelab.tplatfom.repos.QuestionResultRepository;
@@ -18,6 +19,7 @@ import ru.vibelab.tplatfom.requests.QuestionAnswerRequest;
 import ru.vibelab.tplatfom.requests.QuestionRequest;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,44 +36,51 @@ public class QuestionService {
     @Autowired
     private final UserRepository userRepository;
 
-    public Question getById(Long id) {
+    private Question getById(Long id) {
         return questionRepository.findById(id).orElseThrow(() -> new QuestionNotFoundException(id));
+    }
+
+    public QuestionDTO getDtoById(Long id) {
+        Question question = getById(id);
+        return QuestionMapper.fromQuestionToDto(question);
     }
 
     private Test getTestById(Long id) {
         return testRepository.findById(id).orElseThrow(() -> new TestNotFoundException(id));
     }
 
-    public List<Question> getAllByTestId(Long id) {
-        Test test = getTestById(id);
-        return questionRepository.findAllByTest(test);
+    public List<QuestionDTO> getAllByTest(Test test) {
+        return questionRepository.findAllByTest(test).stream()
+                .map(QuestionMapper::fromQuestionToDto)
+                .collect(Collectors.toList());
     }
 
     public Long create(Long testId, QuestionRequest request) {
         Test test = getTestById(testId);
-        Question question = QuestionMapper.fromRequest(request);
+        Question question = QuestionMapper.fromRequestToQuestion(request);
         question.setTest(test);
         return questionRepository.save(question).getId();
     }
 
-    public Question delete(Long id) {
+    public QuestionDTO delete(Long id) {
         Question question = getById(id);
+        questionResultRepository.deleteAllByQuestion(question);
         questionRepository.delete(question);
-        return question;
+        return QuestionMapper.fromQuestionToDto(question);
     }
 
-    public Long answerQuestion(Long questionId, QuestionAnswerRequest request) {
-        Question question = getById(questionId);
+    public void answerQuestion(Long id, QuestionAnswerRequest request) {
+        Question question = getById(id);
         QuestionResult result = new QuestionResult();
         result.setQuestion(question);
         result.setAnswer(request.getAnswer());
         result.setRight(request.getAnswer().equals(question.getSolution()));
 
-        // TODO: Добавить User
+        // TODO: Устанавливать User
         User user = userRepository.findById(1L).orElse(null);
         result.setUser(user);
 
-        return questionResultRepository.save(result).getId();
+        questionResultRepository.save(result);
     }
 
     public Question updateQuestion(Long questionId, QuestionRequest request) {

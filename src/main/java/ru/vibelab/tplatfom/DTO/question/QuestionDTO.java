@@ -1,4 +1,4 @@
-package ru.vibelab.tplatfom.requests;
+package ru.vibelab.tplatfom.DTO.question;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionAnswerRequest {
-    private String answer;
+public class QuestionDTO {
+    private Long id;
+    private String name;
+    private String description;
 }

@@ -11,5 +11,4 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateTestRequest {
     private String name;
-    private String user;  // TODO: Заменить на UserRequest
 }

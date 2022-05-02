@@ -1,7 +1,9 @@
 package ru.vibelab.tplatfom.mappers;
 
+import ru.vibelab.tplatfom.DTO.test.TestShortDTO;
 import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.domain.Test;
+import ru.vibelab.tplatfom.domain.User;
 import ru.vibelab.tplatfom.requests.TestRequest;
 import ru.vibelab.tplatfom.DTO.test.TestDTO;
 import ru.vibelab.tplatfom.domain.Test;
@@ -14,24 +16,23 @@ public class TestMapper {
     public static Test fromRequestToTest(TestRequest dto) {
         Test test = new Test();
         test.setName(dto.getName());
-
-        // TODO: test.setUser(dto.getUser());
-
         Set<Question> questions = dto.getQuestions().stream()
-                .map(QuestionMapper::fromRequest)
+                .map(QuestionMapper::fromRequestToQuestion)
                 .collect(Collectors.toSet());
         test.setQuestions(questions);
-
         return test;
     }
     
     public static TestDTO fromTestToDTO(Test test) {
-        return new TestDTO(test.getId(),
-                test.getName(),
-                test.getUser(),
-                test.getQuestions(),
-                test.getTestResults()
+        TestDTO dto = new TestDTO();
+        dto.setId(test.getId());
+        dto.setName(test.getName());
+        dto.setUser(UserMapper.fromUserToShortDTO(test.getUser()));
+        dto.setQuestions(test.getQuestions().stream()
+                .map(QuestionMapper::fromQuestionToDto)
+                .collect(Collectors.toSet())
         );
+        return dto;
     }
 
     public static List<TestDTO> fromTestsToDTOs(List<Test> tests) {
@@ -40,17 +41,28 @@ public class TestMapper {
                 .collect(Collectors.toList());
     }
 
+    /*
     public static Test fromDTOToTest(TestDTO testDTO) {
-        return new Test(testDTO.getId(),
-                testDTO.getName(),
-                testDTO.getUser(),
-                testDTO.getQuestions(),
-                testDTO.getTestResults()
+        Test test = new Test();
+        test.setId(testDTO.getId());
+        test.setName(testDTO.getName());
+        test.setUser(testDTO.getUser());
+        test.setQuestions(testDTO.getQuestions().forEach(QuestionMapper::));
+        return test;
     }
 
     public static List<Test> fromDTOsToTests(List<TestDTO> testDTOs) {
         return testDTOs.stream()
                 .map(TestMapper::fromDTOToTest)
                 .collect(Collectors.toList());
+    }
+     */
+
+    public static TestShortDTO fromTestToShortDto(Test test) {
+        TestShortDTO dto = new TestShortDTO();
+        dto.setId(test.getId());
+        dto.setName(test.getName());
+        dto.setUser(UserMapper.fromUserToShortDTO(test.getUser()));
+        return dto;
     }
 }

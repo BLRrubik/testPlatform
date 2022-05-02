@@ -10,8 +10,8 @@ public class TestResultMapper {
     public static TestResultDTO fromTestResultToDTO(TestResult testResult) {
         return new TestResultDTO(testResult.getId(),
                 testResult.getScore(),
-                testResult.getUser(),
-                testResult.getTest()
+                TestMapper.fromTestToShortDto(testResult.getTest()),
+                UserMapper.fromUserToShortDTO(testResult.getUser())
         );
     }
 
@@ -21,6 +21,7 @@ public class TestResultMapper {
                 .collect(Collectors.toList());
     }
 
+    /*
     public static TestResult fromDTOToTestResult(TestResultDTO testResultDTO) {
         return new TestResult(testResultDTO.getId(),
                 testResultDTO.getScore(),
@@ -29,9 +30,11 @@ public class TestResultMapper {
         );
     }
 
+
     public static List<TestResult> fromDTOsToTestResults(List<TestResultDTO> testResultDTOs) {
         return testResultDTOs.stream()
                 .map(TestResultMapper::fromDTOToTestResult)
                 .collect(Collectors.toList());
     }
+    */
 }

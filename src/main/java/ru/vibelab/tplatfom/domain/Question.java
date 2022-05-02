@@ -1,7 +1,5 @@
 package ru.vibelab.tplatfom.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,10 +31,8 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "test_id")
-    @JsonBackReference
     private Test test;
 
     @OneToMany(mappedBy = "question")
-    @JsonIgnore
     private Set<QuestionResult> questionResults;
 }
