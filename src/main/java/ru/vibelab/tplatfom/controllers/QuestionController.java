@@ -24,9 +24,7 @@ public class QuestionController {
     @PostMapping()
     public ResponseEntity<String> createQuestion(@RequestBody QuestionRequest request) throws URISyntaxException {
         Long id = questionService.create(request);
-        return ResponseEntity.created(
-                new URI(String.format("/api/quest/%d", id))
-        ).build();
+        return ResponseEntity.created(new URI(String.format("/api/quest/%d", id))).build();
     }
 
     @GetMapping("/{id}")
