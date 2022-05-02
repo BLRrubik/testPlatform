@@ -13,6 +13,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class TestRequest {
     private String name;
-    private String user;  // TODO: Заменить на UserRequest
+    private String user;  // TODO: Заменить на User
     private Set<QuestionRequest> questions;
 }

@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TestMapper {
-    public static Test fromRequestToTest(TestRequest dto) {
+    public static Test fromRequestToTest(TestRequest request) {
         Test test = new Test();
-        test.setName(dto.getName());
-        Set<Question> questions = dto.getQuestions().stream()
+        test.setName(request.getName());
+        Set<Question> questions = request.getQuestions().stream()
                 .map(QuestionMapper::fromRequestToQuestion)
                 .collect(Collectors.toSet());
         test.setQuestions(questions);
