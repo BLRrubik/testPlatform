@@ -6,8 +6,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
-import ru.rubik.timetable.services.customUser.CustomUserDetails;
-import ru.rubik.timetable.services.customUser.CustomUserDetailsService;
+import ru.vibelab.tplatfom.services.customUser.CustomUserDetails;
+import ru.vibelab.tplatfom.services.customUser.CustomUserDetailsService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
