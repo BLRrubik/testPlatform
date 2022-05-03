@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.DTO.question.QuestionDTO;
 import ru.vibelab.tplatfom.domain.Question;
@@ -22,6 +23,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping()
+    @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<String> createQuestion(@RequestBody QuestionRequest request) throws URISyntaxException {
         Long id = questionService.create(request);
         return ResponseEntity.created(new URI(String.format("/api/quest/%d", id))).build();
@@ -34,6 +36,7 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<QuestionDTO> deleteQuestion(@PathVariable(name = "id") String id) {
         QuestionDTO question = questionService.delete(Long.parseLong(id));
         return new ResponseEntity<>(question, HttpStatus.OK);
@@ -49,6 +52,7 @@ public class QuestionController {
     }
 
     @PostMapping("/{id}/edit")
+    @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<Question> updateQuestion(
             @PathVariable(name = "id") String id,
             @RequestBody QuestionRequest request

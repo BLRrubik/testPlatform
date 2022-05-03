@@ -1,6 +1,9 @@
 package ru.vibelab.tplatfom.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.vibelab.tplatfom.DTO.auth.AuthDTO;
@@ -29,6 +32,7 @@ import ru.vibelab.tplatfom.security.JwtProvider;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -45,7 +49,7 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public AuthDTO authUser(AuthRequest request){
+    public AuthDTO authUser(AuthRequest request) {
         User user = userRepo.findByUsername(request.getUsername());
 
 
@@ -64,7 +68,7 @@ public class UserService {
                 "OK");
     }
 
-    public RegistrationDTO registerUser(RegistrationRequest registrationRequest){
+    public RegistrationDTO registerUser(RegistrationRequest registrationRequest) {
         boolean isExists = userRepo.findByUsername(registrationRequest.getUsername()) != null;
 
         if (isExists) {
@@ -95,6 +99,7 @@ public class UserService {
         return UserMapper.fromUserToDTO(userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
     }
 
+
     public UserDTO updateUser(Long id, UserUpdateRequest request) {
         User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
@@ -102,11 +107,11 @@ public class UserService {
         user.setPassword(request.getPassword());
 
         request.getRoles()
-                        .forEach((role -> {
-                            if (roleRepository.findByName(role.getName()) == null) {
-                                throw new RoleNotFoundException("Role is not correct");
-                            }
-                        }));
+                .forEach((role -> {
+                    if (roleRepository.findByName(role.getName()) == null) {
+                        throw new RoleNotFoundException("Role is not correct");
+                    }
+                }));
 
         user.setRoles(request.getRoles());
 
@@ -117,7 +122,7 @@ public class UserService {
 
     public void deleteUser(UserDeleteRequest request) {
         userRepo.delete(userRepo.findById(request.getId()).orElseThrow(
-                () ->  new UserNotFoundException(request.getId())));
+                () -> new UserNotFoundException(request.getId())));
     }
 
     public List<TestDTO> getUserTests(Long id) {
