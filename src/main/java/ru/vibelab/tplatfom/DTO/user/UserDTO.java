@@ -1,5 +1,6 @@
 package ru.vibelab.tplatfom.DTO.user;
 
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,6 @@ import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
