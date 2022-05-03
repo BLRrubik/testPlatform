@@ -32,16 +32,17 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-
         return ResponseEntity.of(Optional.of(userService.getUser(id)));
     }
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
         return ResponseEntity.of(Optional.of(userService.updateUser(id, request)));
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAuthority('Admin')")
     public void deleteUser(@RequestBody UserDeleteRequest request) {
         userService.deleteUser(request);
     }
@@ -53,6 +54,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/testresult")
+    @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<List<TestResultDTO>> getUserResults(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(userService.getUserResults(id)));
     }
