@@ -97,10 +97,6 @@ public class UserService {
         return UserMapper.fromUserToDTO(userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
     }
 
-    public boolean isAdminOrEqualId(Long id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getAuthorities().contains(new SimpleGrantedAuthority("Admin")) || Objects.equals(userRepo.findByUsername(auth.getName()).getId(), id);
-    }
 
     public UserDTO updateUser(Long id, UserUpdateRequest request) {
         User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id));

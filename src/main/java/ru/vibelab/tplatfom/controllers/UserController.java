@@ -30,9 +30,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('Admin', 'Student')")
+    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-        if (!userService.isAdminOrEqualId(id)){throw new AccessDeniedException("");}
+
         return ResponseEntity.of(Optional.of(userService.getUser(id)));
     }
 
