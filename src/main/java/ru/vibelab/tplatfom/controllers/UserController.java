@@ -2,6 +2,7 @@ package ru.vibelab.tplatfom.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.DTO.test.TestDTO;
 import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
@@ -22,6 +23,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<Set<UserShortDTO>> getAllUsers() {
         return ResponseEntity.of(Optional.of(userService.getAllUsers()));
     }
