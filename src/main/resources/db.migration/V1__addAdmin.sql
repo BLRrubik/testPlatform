@@ -28,13 +28,15 @@ create table user_role
 );
 
 alter table if exists user_role add constraint user_fk foreign key (user_id) references users;
-alter table if exists user_role add constraint role_fk foreign key (role_id) references "role";
+alter table if exists user_role add constraint role_fk foreign key (role_id) references role;
 
 insert into users (username, password)
 values ('Admin', '228');
 
 insert into role ("name")
 values ('Admin');
+values ('Teacher');
+values ('Student');
 
 insert into user_role (user_id, role_id)
 values (1, 1);
