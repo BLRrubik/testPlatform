@@ -35,8 +35,6 @@ values ('Admin', '228');
 
 insert into role ("name")
 values ('Admin');
-values ('Teacher');
-values ('Student');
 
 insert into user_role (user_id, role_id)
 values (1, 1);
