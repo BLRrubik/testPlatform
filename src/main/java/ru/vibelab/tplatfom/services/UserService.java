@@ -20,12 +20,14 @@ import ru.vibelab.tplatfom.mappers.TestResultMapper;
 import ru.vibelab.tplatfom.mappers.UserMapper;
 import ru.vibelab.tplatfom.repos.RoleRepository;
 import ru.vibelab.tplatfom.repos.UserRepository;
+import ru.vibelab.tplatfom.requests.UpdateTestRequest;
 import ru.vibelab.tplatfom.requests.UserDeleteRequest;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 import ru.vibelab.tplatfom.requests.auth.AuthRequest;
 import ru.vibelab.tplatfom.requests.auth.RegistrationRequest;
 import ru.vibelab.tplatfom.security.JwtProvider;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
@@ -131,5 +133,25 @@ public class UserService {
         ).getTestResults());
 
         return TestResultMapper.fromTestsResultsToDTOs(results);
+    }
+
+    public UserDTO getProfile(Principal principal) {
+        User user = userRepo.findByUsername(principal.getName());
+
+        if (user == null) {
+            throw new UserNotFoundException("User is incorrect");
+        }
+
+        return UserMapper.fromUserToDTO(user);
+    }
+
+    public UserDTO updateUtil(Principal principal, UserUpdateRequest request) {
+        User user = userRepo.findByUsername(principal.getName());
+
+        if (user == null) {
+            throw new UserNotFoundException("User is incorrect");
+        }
+
+        return updateUser(user.getId(), request);
     }
 }

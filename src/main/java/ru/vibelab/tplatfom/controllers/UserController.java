@@ -8,10 +8,12 @@ import ru.vibelab.tplatfom.DTO.test.TestDTO;
 import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.user.UserDTO;
 import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
+import ru.vibelab.tplatfom.domain.User;
 import ru.vibelab.tplatfom.requests.UserDeleteRequest;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 import ru.vibelab.tplatfom.services.UserService;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,13 +36,23 @@ public class UserController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<UserDTO> updateUserByAdmin(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
         return ResponseEntity.of(Optional.of(userService.updateUser(id, request)));
     }
 
     @DeleteMapping
     public void deleteUser(@RequestBody UserDeleteRequest request) {
         userService.deleteUser(request);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserDTO> getProfile(Principal principal) {
+        return ResponseEntity.of(Optional.of(userService.getProfile(principal)));
+    }
+
+    @PostMapping("/profile/edit")
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserUpdateRequest request, Principal principal) {
+        return ResponseEntity.of(Optional.of(userService.updateUtil(principal, request)));
     }
 
     //waiting for authorization
