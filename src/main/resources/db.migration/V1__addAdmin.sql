@@ -28,7 +28,7 @@ create table user_role
 );
 
 alter table if exists user_role add constraint user_fk foreign key (user_id) references users;
-alter table if exists user_role add constraint role_fk foreign key (role_id) references "role";
+alter table if exists user_role add constraint role_fk foreign key (role_id) references role;
 
 insert into users (username, password)
 values ('Admin', '228');
