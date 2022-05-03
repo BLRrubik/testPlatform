@@ -24,7 +24,6 @@ public class AuthController {
     @ApiOperation(value = "Регистрация пользователя")
     @PostMapping("/register")
     public RegistrationDTO registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {
-
         return userService.registerUser(registrationRequest);
     }
 

@@ -1,6 +1,9 @@
 package ru.vibelab.tplatfom.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.vibelab.tplatfom.DTO.auth.AuthDTO;
@@ -27,6 +30,7 @@ import ru.vibelab.tplatfom.requests.auth.RegistrationRequest;
 import ru.vibelab.tplatfom.security.JwtProvider;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -90,7 +94,16 @@ public class UserService {
     }
 
     public UserDTO getUser(Long id) {
-        return UserMapper.fromUserToDTO(userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
+        if (isAdminOrEqualId(id))
+        {
+            return UserMapper.fromUserToDTO(userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
+        }
+        return null;
+    }
+
+    private boolean isAdminOrEqualId(Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getAuthorities().contains(new SimpleGrantedAuthority("Admin")) || Objects.equals(userRepo.findByUsername(auth.getName()).getId(), id);
     }
 
     public UserDTO updateUser(Long id, UserUpdateRequest request) {

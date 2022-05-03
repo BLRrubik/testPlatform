@@ -29,6 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Student')")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(userService.getUser(id)));
     }
