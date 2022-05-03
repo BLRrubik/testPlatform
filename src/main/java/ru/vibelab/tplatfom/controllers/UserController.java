@@ -32,9 +32,7 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('Admin', 'Student')")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-        if (!userService.isAdminOrEqualId(id)){
-            throw new AccessDeniedException("You don't have enough rights");
-        }
+        if (!userService.isAdminOrEqualId(id)){throw new AccessDeniedException("");}
         return ResponseEntity.of(Optional.of(userService.getUser(id)));
     }
 
