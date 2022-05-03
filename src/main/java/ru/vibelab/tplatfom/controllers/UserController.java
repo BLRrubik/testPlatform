@@ -2,6 +2,7 @@ package ru.vibelab.tplatfom.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.DTO.test.TestDTO;
@@ -31,6 +32,9 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('Admin', 'Student')")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+        if (!userService.isAdminOrEqualId(id)){
+            throw new AccessDeniedException("You don't have enough rights");
+        }
         return ResponseEntity.of(Optional.of(userService.getUser(id)));
     }
 

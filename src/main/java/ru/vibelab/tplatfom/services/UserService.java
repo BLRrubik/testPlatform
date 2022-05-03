@@ -47,7 +47,7 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public AuthDTO authUser(AuthRequest request){
+    public AuthDTO authUser(AuthRequest request) {
         User user = userRepo.findByUsername(request.getUsername());
 
 
@@ -66,7 +66,7 @@ public class UserService {
                 "OK");
     }
 
-    public RegistrationDTO registerUser(RegistrationRequest registrationRequest){
+    public RegistrationDTO registerUser(RegistrationRequest registrationRequest) {
         boolean isExists = userRepo.findByUsername(registrationRequest.getUsername()) != null;
 
         if (isExists) {
@@ -94,14 +94,10 @@ public class UserService {
     }
 
     public UserDTO getUser(Long id) {
-        if (isAdminOrEqualId(id))
-        {
-            return UserMapper.fromUserToDTO(userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
-        }
-        return null;
+        return UserMapper.fromUserToDTO(userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
     }
 
-    private boolean isAdminOrEqualId(Long id) {
+    public boolean isAdminOrEqualId(Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getAuthorities().contains(new SimpleGrantedAuthority("Admin")) || Objects.equals(userRepo.findByUsername(auth.getName()).getId(), id);
     }
@@ -113,11 +109,11 @@ public class UserService {
         user.setPassword(request.getPassword());
 
         request.getRoles()
-                        .forEach((role -> {
-                            if (roleRepository.findByName(role.getName()) == null) {
-                                throw new RoleNotFoundException("Role is not correct");
-                            }
-                        }));
+                .forEach((role -> {
+                    if (roleRepository.findByName(role.getName()) == null) {
+                        throw new RoleNotFoundException("Role is not correct");
+                    }
+                }));
 
         user.setRoles(request.getRoles());
 
@@ -128,7 +124,7 @@ public class UserService {
 
     public void deleteUser(UserDeleteRequest request) {
         userRepo.delete(userRepo.findById(request.getId()).orElseThrow(
-                () ->  new UserNotFoundException(request.getId())));
+                () -> new UserNotFoundException(request.getId())));
     }
 
     public List<TestDTO> getUserTests(Long id) {
