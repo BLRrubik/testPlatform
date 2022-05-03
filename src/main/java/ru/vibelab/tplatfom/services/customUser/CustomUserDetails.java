@@ -22,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
         c.login = user.getUsername();
         c.password = user.getPassword();
         c.grantedAuthorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.toString())).collect(Collectors.toList());
+                .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
         return c;
     }
 
