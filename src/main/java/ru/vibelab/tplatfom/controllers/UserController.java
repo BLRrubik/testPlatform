@@ -2,17 +2,18 @@ package ru.vibelab.tplatfom.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.DTO.test.TestDTO;
 import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.user.UserDTO;
 import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
+import ru.vibelab.tplatfom.domain.User;
 import ru.vibelab.tplatfom.requests.UserDeleteRequest;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 import ru.vibelab.tplatfom.services.UserService;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,21 +31,28 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(userService.getUser(id)));
     }
 
     @PostMapping("/{id}")
-    @PreAuthorize("hasAuthority('Admin')")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<UserDTO> updateUserByAdmin(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
         return ResponseEntity.of(Optional.of(userService.updateUser(id, request)));
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAuthority('Admin')")
     public void deleteUser(@RequestBody UserDeleteRequest request) {
         userService.deleteUser(request);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserDTO> getProfile(Principal principal) {
+        return ResponseEntity.of(Optional.of(userService.getProfile(principal)));
+    }
+
+    @PostMapping("/profile/edit")
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserUpdateRequest request, Principal principal) {
+        return ResponseEntity.of(Optional.of(userService.updateUtil(principal, request)));
     }
 
     //waiting for authorization
@@ -54,7 +62,6 @@ public class UserController {
     }
 
     @GetMapping("/{id}/testresult")
-    @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<List<TestResultDTO>> getUserResults(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(userService.getUserResults(id)));
     }
