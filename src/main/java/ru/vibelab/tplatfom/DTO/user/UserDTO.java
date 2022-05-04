@@ -1,15 +1,16 @@
 package ru.vibelab.tplatfom.DTO.user;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import ru.vibelab.tplatfom.domain.QuestionResult;
-import ru.vibelab.tplatfom.domain.Role;
-import ru.vibelab.tplatfom.domain.Test;
-import ru.vibelab.tplatfom.domain.TestResult;
 
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import ru.vibelab.tplatfom.DTO.question.QuestionResultDTO;
+import ru.vibelab.tplatfom.DTO.role.RoleDTO;
+import ru.vibelab.tplatfom.DTO.test.TestDTO;
+import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,8 +18,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserDTO {
     private String username;
-    private Set<Role> roles;
-    private Set<Test> tests;
-    private Set<TestResult> testResults;
-    private Set<QuestionResult> questionResults;
+    private List<RoleDTO> roles;
+    private List<TestDTO> tests;
+    private List<TestResultDTO> testResults;
+    private List<QuestionResultDTO> questionResults;
 }

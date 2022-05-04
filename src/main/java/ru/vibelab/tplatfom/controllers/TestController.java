@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.DTO.question.QuestionDTO;
 import ru.vibelab.tplatfom.DTO.test.TestDTO;
@@ -32,12 +33,14 @@ public class TestController {
     private final QuestionService questionService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<List<TestShortDTO>> getTests() {
         List<TestShortDTO> tests = testService.getAll();
         return new ResponseEntity<>(tests, HttpStatus.OK);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<String> createTest(@RequestBody TestRequest test) throws URISyntaxException {
         Long id = testService.create(test);
         return ResponseEntity.created(new URI(String.format("/api/test/%d", id))).build();
@@ -50,6 +53,7 @@ public class TestController {
     }
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<String> updateTest(
             @PathVariable(name = "id") String id,
             @RequestBody UpdateTestRequest request
@@ -59,12 +63,14 @@ public class TestController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<TestDTO> deleteTest(@PathVariable(name = "id") String id) {
         Test test = testService.delete(Long.parseLong(id));
         return new ResponseEntity<>(TestMapper.fromTestToDTO(test), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/testresults")
+    @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<List<TestResultDTO>> getResults(@PathVariable(name = "id") String id) {
         List<TestResultDTO> results = testService.getTestResults(Long.parseLong(id));
         return new ResponseEntity<>(results, HttpStatus.OK);

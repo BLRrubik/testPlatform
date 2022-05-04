@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,15 +27,15 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Test> tests;
 
     @OneToMany(mappedBy = "user")
@@ -42,4 +43,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<QuestionResult> questionResults;
+
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
 }

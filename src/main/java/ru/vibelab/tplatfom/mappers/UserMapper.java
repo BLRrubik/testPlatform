@@ -2,7 +2,8 @@ package ru.vibelab.tplatfom.mappers;
 
 import ru.vibelab.tplatfom.DTO.user.UserDTO;
 import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
-import ru.vibelab.tplatfom.domain.User;
+import ru.vibelab.tplatfom.domain.*;
+import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 
 import java.util.List;
 import java.util.Set;
@@ -11,10 +12,10 @@ import java.util.stream.Collectors;
 public class UserMapper {
     public static UserDTO fromUserToDTO(User user) {
         return new UserDTO(user.getUsername(),
-                user.getRoles(),
-                user.getTests(),
-                user.getTestResults(),
-                user.getQuestionResults()
+                RoleMapper.fromRolesToDTOs(user.getRoles()),
+                TestMapper.fromTestsToDTOs(List.copyOf(user.getTests())),
+                TestResultMapper.fromTestsResultsToDTOs(List.copyOf(user.getTestResults())),
+                QuestionMapper.fromQuestionResultsToDTOs(user.getQuestionResults())
         );
     }
 
@@ -35,12 +36,4 @@ public class UserMapper {
                 .map(UserMapper::fromUserToShortDTO)
                 .collect(Collectors.toSet());
     }
-
-    // public static void fromUpdateRequestToUser(User user, UserUpdateRequest request) {
-    //     user.setUsername(request.getUsername());
-    //     user.setPassword(request.getPassword());
-    //     user.setRoles(request.getRoles());
-    //     user.setTestResults(request.getTestResults());
-    //     user.setQuestionResults(request.getQuestionResults());
-    // }
 }
