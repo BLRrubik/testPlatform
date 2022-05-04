@@ -30,34 +30,34 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<QuestionDTO> getQuestion(@PathVariable(name = "id") String id) {
-        QuestionDTO question = questionService.getDtoById(Long.parseLong(id));
+    public ResponseEntity<QuestionDTO> getQuestion(@PathVariable(name = "id") Long id) {
+        QuestionDTO question = questionService.getDtoById(id);
         return new ResponseEntity<>(question, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('Teacher')")
-    public ResponseEntity<QuestionDTO> deleteQuestion(@PathVariable(name = "id") String id) {
-        QuestionDTO question = questionService.delete(Long.parseLong(id));
+    public ResponseEntity<QuestionDTO> deleteQuestion(@PathVariable(name = "id") Long id) {
+        QuestionDTO question = questionService.delete(id);
         return new ResponseEntity<>(question, HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<String> answerQuestion(
-            @PathVariable(name = "id") String id,
+            @PathVariable(name = "id") Long id,
             @RequestBody QuestionAnswerRequest request
     ) {
-        questionService.answerQuestion(Long.parseLong(id), request);
+        questionService.answerQuestion(id, request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/edit")
     @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<Question> updateQuestion(
-            @PathVariable(name = "id") String id,
+            @PathVariable(name = "id") Long id,
             @RequestBody QuestionRequest request
     ) {
-        Question question = questionService.updateQuestion(Long.parseLong(id), request);
+        Question question = questionService.updateQuestion(id, request);
         return new ResponseEntity<>(question, HttpStatus.OK);
     }
 }

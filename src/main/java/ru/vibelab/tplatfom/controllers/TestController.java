@@ -12,7 +12,6 @@ import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.test.TestShortDTO;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.mappers.TestMapper;
-import ru.vibelab.tplatfom.requests.QuestionRequest;
 import ru.vibelab.tplatfom.requests.TestRequest;
 import ru.vibelab.tplatfom.requests.UpdateTestRequest;
 import ru.vibelab.tplatfom.services.QuestionService;
@@ -47,38 +46,38 @@ public class TestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TestDTO> getTest(@PathVariable(name = "id") String id) {
-        Test test = testService.getById(Long.parseLong(id));
+    public ResponseEntity<TestDTO> getTest(@PathVariable(name = "id") Long id) {
+        Test test = testService.getById(id);
         return new ResponseEntity<>(TestMapper.fromTestToDTO(test), HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
     @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<String> updateTest(
-            @PathVariable(name = "id") String id,
+            @PathVariable(name = "id") Long id,
             @RequestBody UpdateTestRequest request
     ) {
-        testService.updateTest(Long.parseLong(id), request);
+        testService.updateTest(id, request);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('Teacher')")
-    public ResponseEntity<TestDTO> deleteTest(@PathVariable(name = "id") String id) {
-        Test test = testService.delete(Long.parseLong(id));
+    public ResponseEntity<TestDTO> deleteTest(@PathVariable(name = "id") Long id) {
+        Test test = testService.delete(id);
         return new ResponseEntity<>(TestMapper.fromTestToDTO(test), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/testresults")
     @PreAuthorize("hasAuthority('Teacher')")
-    public ResponseEntity<List<TestResultDTO>> getResults(@PathVariable(name = "id") String id) {
-        List<TestResultDTO> results = testService.getTestResults(Long.parseLong(id));
+    public ResponseEntity<List<TestResultDTO>> getResults(@PathVariable(name = "id") Long id) {
+        List<TestResultDTO> results = testService.getTestResults(id);
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/quest")
-    public ResponseEntity<List<QuestionDTO>> getTestQuestions(@PathVariable(name = "id") String id) {
-        Test test = testService.getById(Long.parseLong(id));
+    public ResponseEntity<List<QuestionDTO>> getTestQuestions(@PathVariable(name = "id") Long id) {
+        Test test = testService.getById(id);
         List<QuestionDTO> questions = questionService.getAllByTest(test);
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
