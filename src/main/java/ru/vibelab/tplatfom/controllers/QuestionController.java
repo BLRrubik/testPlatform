@@ -12,6 +12,7 @@ import ru.vibelab.tplatfom.requests.QuestionAnswerRequest;
 import ru.vibelab.tplatfom.requests.QuestionRequest;
 import ru.vibelab.tplatfom.services.QuestionService;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -24,7 +25,7 @@ public class QuestionController {
 
     @PostMapping()
     @PreAuthorize("hasAuthority('Teacher')")
-    public ResponseEntity<String> createQuestion(@RequestBody QuestionRequest request) throws URISyntaxException {
+    public ResponseEntity<String> createQuestion(@RequestBody @Valid QuestionRequest request) throws URISyntaxException {
         Long id = questionService.create(request);
         return ResponseEntity.created(new URI(String.format("/api/quest/%d", id))).build();
     }
@@ -45,7 +46,7 @@ public class QuestionController {
     @PostMapping("/{id}")
     public ResponseEntity<String> answerQuestion(
             @PathVariable(name = "id") String id,
-            @RequestBody QuestionAnswerRequest request
+            @RequestBody @Valid QuestionAnswerRequest request
     ) {
         questionService.answerQuestion(Long.parseLong(id), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -55,7 +56,7 @@ public class QuestionController {
     @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<Question> updateQuestion(
             @PathVariable(name = "id") String id,
-            @RequestBody QuestionRequest request
+            @RequestBody @Valid QuestionRequest request
     ) {
         Question question = questionService.updateQuestion(Long.parseLong(id), request);
         return new ResponseEntity<>(question, HttpStatus.OK);

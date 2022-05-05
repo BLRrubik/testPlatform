@@ -6,6 +6,7 @@ import ru.vibelab.tplatfom.domain.Role;
 import ru.vibelab.tplatfom.domain.TestResult;
 
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Getter
@@ -13,7 +14,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdateRequest {
+    @NotNull
     private String username;
+    @NotNull
     private String password;
     private Set<Role> roles;
 }
