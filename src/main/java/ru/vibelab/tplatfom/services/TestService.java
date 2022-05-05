@@ -6,8 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.test.TestShortDTO;
-import ru.vibelab.tplatfom.domain.Question;
-import ru.vibelab.tplatfom.domain.Test;
+import ru.vibelab.tplatfom.domain.*;
 import ru.vibelab.tplatfom.exceptions.test.TestNotFoundException;
 import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.mappers.TestResultMapper;
@@ -15,7 +14,9 @@ import ru.vibelab.tplatfom.repos.*;
 import ru.vibelab.tplatfom.requests.TestRequest;
 import ru.vibelab.tplatfom.requests.UpdateTestRequest;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,14 +53,12 @@ public class TestService {
                 .collect(Collectors.toList());
     }
 
-    public Long create(TestRequest request) {
+    public Long create(TestRequest request, Principal principal) {
         Test requestTest = TestMapper.fromRequestToTest(request);
-
-        requestTest.setUser(userRepository.findById(1L).orElse(null));
-        // TODO: Заменить на пользователя
-
+        User user = userRepository.findByUsername(principal.getName());
+        requestTest.setUser(user);
         Test test = testRepository.save(requestTest);
-        requestTest.getQuestions().forEach(item -> item.setTest(test));
+        requestTest.getQuestions().forEach(question -> question.setTest(test));
         questionRepository.saveAll(test.getQuestions());
         return test.getId();
     }
@@ -79,5 +78,24 @@ public class TestService {
         testResultRepository.deleteAllByTest(test);
         testRepository.delete(test);
         return test;
+    }
+
+    public TestResult finish(Long id, Principal principal) {
+        Test test = getById(id);
+        User user = userRepository.findByUsername(principal.getName());
+        TestResult testResult = testResultRepository.findByUserAndTest(user, test);
+        long score = 0L;
+
+        for (Question question : test.getQuestions()) {
+            QuestionResult questionResult = questionResultRepository.findByQuestionAndUser(question, user);
+            if (questionResult != null && questionResult.getRight()) {
+                score++;
+            }
+        }
+
+        testResult.setFinished(true);
+        testResult.setScore(score);
+        testResultRepository.save(testResult);
+        return testResult;
     }
 }

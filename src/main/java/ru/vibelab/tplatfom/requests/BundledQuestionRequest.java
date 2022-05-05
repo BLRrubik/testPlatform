@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionRequest {
-    private Long testId;
+public class BundledQuestionRequest {
     private String name;
     private String description;
     private String solution;

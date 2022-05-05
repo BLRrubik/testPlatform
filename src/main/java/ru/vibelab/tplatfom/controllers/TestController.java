@@ -11,7 +11,9 @@ import ru.vibelab.tplatfom.DTO.test.TestDTO;
 import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.test.TestShortDTO;
 import ru.vibelab.tplatfom.domain.Test;
+import ru.vibelab.tplatfom.domain.TestResult;
 import ru.vibelab.tplatfom.mappers.TestMapper;
+import ru.vibelab.tplatfom.mappers.TestResultMapper;
 import ru.vibelab.tplatfom.requests.TestRequest;
 import ru.vibelab.tplatfom.requests.UpdateTestRequest;
 import ru.vibelab.tplatfom.services.QuestionService;
@@ -19,6 +21,7 @@ import ru.vibelab.tplatfom.services.TestService;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -40,8 +43,10 @@ public class TestController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('Teacher')")
-    public ResponseEntity<String> createTest(@RequestBody TestRequest test) throws URISyntaxException {
-        Long id = testService.create(test);
+    public ResponseEntity<String> createTest(
+            @RequestBody TestRequest request, Principal principal
+    ) throws URISyntaxException {
+        Long id = testService.create(request, principal);
         return ResponseEntity.created(new URI(String.format("/api/test/%d", id))).build();
     }
 
@@ -80,5 +85,14 @@ public class TestController {
         Test test = testService.getById(id);
         List<QuestionDTO> questions = questionService.getAllByTest(test);
         return new ResponseEntity<>(questions, HttpStatus.OK);
+    }
+
+    @PostMapping("{id}/finish")
+    public ResponseEntity<TestResultDTO> finish(
+            @PathVariable(name = "id") Long id,
+            Principal principal
+    ) {
+        TestResult result = testService.finish(id, principal);
+        return new ResponseEntity<>(TestResultMapper.fromTestResultToDTO(result), HttpStatus.OK);
     }
 }
