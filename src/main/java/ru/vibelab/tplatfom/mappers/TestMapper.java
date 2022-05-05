@@ -62,7 +62,12 @@ public class TestMapper {
         TestShortDTO dto = new TestShortDTO();
         dto.setId(test.getId());
         dto.setName(test.getName());
-        dto.setUser(UserMapper.fromUserToShortDTO(test.getUser()));
         return dto;
+    }
+
+    public static List<TestShortDTO> fromTestsToShortDTOs(List<Test> tests) {
+        return tests.stream()
+                .map(TestMapper::fromTestToShortDto)
+                .collect(Collectors.toList());
     }
 }

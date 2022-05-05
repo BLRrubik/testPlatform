@@ -8,7 +8,8 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserUpdateRequest {
+public class UserUpdateByAdminRequest {
     private String username;
     private String password;
+    private Set<RoleUpdateRequest> roles;
 }
