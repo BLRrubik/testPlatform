@@ -137,6 +137,10 @@ public class UserService {
     }
 
     public void deleteUser(UserDeleteRequest request) {
+        Long id = request.getId();
+        if (id == 1) {
+            throw new UserNotFoundException("Unable to delete Admin");
+        }
         userRepo.delete(userRepo.findById(request.getId()).orElseThrow(
                 () -> new UserNotFoundException(request.getId())));
     }
