@@ -15,6 +15,7 @@ import ru.vibelab.tplatfom.requests.UserUpdateByAdminRequest;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 import ru.vibelab.tplatfom.services.UserService;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -40,13 +41,13 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUserByAdmin(@PathVariable Long id, @RequestBody UserUpdateByAdminRequest request) {
+    public ResponseEntity<UserDTO> updateUserByAdmin(@PathVariable Long id, @RequestBody @Valid UserUpdateByAdminRequest request) {
         return ResponseEntity.of(Optional.of(userService.updateUserByAdmin(id, request)));
     }
 
     @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping
-    public void deleteUser(@RequestBody UserDeleteRequest request) {
+    public void deleteUser(@RequestBody @Valid UserDeleteRequest request) {
         userService.deleteUser(request);
     }
 
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/profile/edit")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserUpdateRequest request, Principal principal) {
+    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserUpdateRequest request, Principal principal) {
         if (principal == null) {
             throw new UnauthorizedException();
         }

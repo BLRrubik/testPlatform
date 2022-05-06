@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("api/auth")
-@Api(value = "auth", description = "Rest API for auth operations", tags = "Auth API")
+@Api(value = "auth",  tags = "Auth API")
 public class AuthController {
     @Autowired
     private UserService userService;
@@ -29,7 +29,7 @@ public class AuthController {
 
     @ApiOperation(value = "Авторизация пользователя")
     @PostMapping("/login")
-    public AuthDTO auth(@RequestBody AuthRequest request) {
+    public AuthDTO auth(@Valid @RequestBody AuthRequest request) {
         return userService.authUser(request);
     }
 }
