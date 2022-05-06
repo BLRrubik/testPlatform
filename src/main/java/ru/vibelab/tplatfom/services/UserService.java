@@ -16,6 +16,7 @@ import ru.vibelab.tplatfom.domain.Role;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
 import ru.vibelab.tplatfom.domain.User;
+import ru.vibelab.tplatfom.exceptions.auth.UsernameExistsException;
 import ru.vibelab.tplatfom.exceptions.role.RoleNotFoundException;
 import ru.vibelab.tplatfom.exceptions.user.UserNotFoundException;
 import ru.vibelab.tplatfom.mappers.RoleMapper;
@@ -55,14 +56,14 @@ public class UserService {
     public AuthDTO authUser(AuthRequest request) {
         User user = userRepo.findByUsername(request.getUsername());
 
+        if (user == null) {
+            throw new UserNotFoundException("Username is invalid");
 
-//        if (user == null) {
-//            return new AuthDTO("Login is not correct");
-//        }
-//
-//        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//            return new AuthDTO("Password is not correct");
-//        }
+        }
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new UserNotFoundException("Password is invalid");
+        }
 
         System.out.println(user.getRoles());
         String token = jwtProvider.generateToken(user.getUsername());
@@ -75,7 +76,7 @@ public class UserService {
         boolean isExists = userRepo.findByUsername(registrationRequest.getUsername()) != null;
 
         if (isExists) {
-            return new RegistrationDTO("Login is already taken");
+            throw new UsernameExistsException("Username is already taken");
         }
 
         Role role = roleRepository.findByName("Student");
