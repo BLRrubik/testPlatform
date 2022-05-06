@@ -1,16 +1,16 @@
-package ru.vibelab.tplatfom.DTO.test;
+package ru.vibelab.tplatfom.requests;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class TestShortDTO {
+@NoArgsConstructor
+public class RoleUpdateRequest {
     private Long id;
     private String name;
 }

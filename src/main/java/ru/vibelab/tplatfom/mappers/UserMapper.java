@@ -13,8 +13,8 @@ public class UserMapper {
     public static UserDTO fromUserToDTO(User user) {
         return new UserDTO(user.getUsername(),
                 RoleMapper.fromRolesToDTOs(user.getRoles()),
-                TestMapper.fromTestsToDTOs(List.copyOf(user.getTests())),
-                TestResultMapper.fromTestsResultsToDTOs(List.copyOf(user.getTestResults())),
+                TestMapper.fromTestsToShortDTOs(List.copyOf(user.getTests())),
+                TestResultMapper.fromTestsResultsToShortDTOs(List.copyOf(user.getTestResults())),
                 QuestionMapper.fromQuestionResultsToDTOs(user.getQuestionResults())
         );
     }
@@ -27,7 +27,7 @@ public class UserMapper {
 
     public static UserShortDTO fromUserToShortDTO(User user) {
         return new UserShortDTO(user.getId(),
-                user.getUsername()
+                user.getUsername(), RoleMapper.fromRolesToDTOs(user.getRoles())
         );
     }
 

@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.vibelab.tplatfom.DTO.question.QuestionResultDTO;
 import ru.vibelab.tplatfom.DTO.role.RoleDTO;
-import ru.vibelab.tplatfom.DTO.test.TestDTO;
-import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
+import ru.vibelab.tplatfom.DTO.test.TestResultShortDTO;
+import ru.vibelab.tplatfom.DTO.test.TestShortDTO;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public class UserDTO {
     private String username;
     private List<RoleDTO> roles;
-    private List<TestDTO> tests;
-    private List<TestResultDTO> testResults;
+    private List<TestShortDTO> tests;
+    private List<TestResultShortDTO> testResults;
     private List<QuestionResultDTO> questionResults;
 }
