@@ -52,6 +52,7 @@ public class TestController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<TestDTO> getTest(@PathVariable(name = "id") Long id) {
         Test test = testService.getById(id);
         return new ResponseEntity<>(TestMapper.fromTestToDTO(test), HttpStatus.OK);
@@ -82,6 +83,7 @@ public class TestController {
     }
 
     @GetMapping("/{id}/quest")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<QuestionDTO>> getTestQuestions(@PathVariable(name = "id") Long id) {
         Test test = testService.getById(id);
         List<QuestionDTO> questions = questionService.getAllByTest(test);
@@ -89,6 +91,7 @@ public class TestController {
     }
 
     @PostMapping("{id}/finish")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<TestResultDTO> finish(
             @PathVariable(name = "id") Long id,
             Principal principal

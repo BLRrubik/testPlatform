@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.DTO.question.QuestionDTO;
-import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.requests.question.BundledQuestionRequest;
 import ru.vibelab.tplatfom.requests.question.QuestionAnswerRequest;
 import ru.vibelab.tplatfom.requests.question.QuestionRequest;
@@ -35,6 +34,7 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<QuestionDTO> getQuestion(@PathVariable(name = "id") Long id) {
         QuestionDTO question = questionService.getDtoById(id);
         return new ResponseEntity<>(question, HttpStatus.OK);
@@ -58,6 +58,7 @@ public class QuestionController {
     }
 
     @PostMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> answerQuestion(
             @PathVariable(name = "id") Long id,
             @RequestBody @Valid QuestionAnswerRequest request,

@@ -29,7 +29,7 @@ public class UserController {
         return ResponseEntity.of(Optional.of(userService.getAllUsers()));
     }
 
-    @PreAuthorize("hasAuthority('Admin') or hasAuthority('Teacher')")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Teacher')")
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(userService.getUser(id)));
@@ -37,7 +37,10 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('Admin')")
     @PostMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUserByAdmin(@PathVariable Long id, @RequestBody @Valid UserUpdateByAdminRequest request) {
+    public ResponseEntity<UserDTO> updateUserByAdmin(
+            @PathVariable Long id,
+            @RequestBody @Valid UserUpdateByAdminRequest request
+    ) {
         return ResponseEntity.of(Optional.of(userService.updateUserByAdmin(id, request)));
     }
 
