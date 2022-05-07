@@ -8,15 +8,15 @@ import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.test.TestShortDTO;
 import ru.vibelab.tplatfom.domain.*;
 import ru.vibelab.tplatfom.exceptions.test.TestNotFoundException;
+import ru.vibelab.tplatfom.exceptions.test.TestNotStartedException;
 import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.mappers.TestResultMapper;
 import ru.vibelab.tplatfom.repos.*;
-import ru.vibelab.tplatfom.requests.TestRequest;
-import ru.vibelab.tplatfom.requests.UpdateTestRequest;
+import ru.vibelab.tplatfom.requests.test.TestRequest;
+import ru.vibelab.tplatfom.requests.test.UpdateTestRequest;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,11 +54,10 @@ public class TestService {
     }
 
     public Long create(TestRequest request, Principal principal) {
-        Test requestTest = TestMapper.fromRequestToTest(request);
+        Test test = TestMapper.fromRequestToTest(request);
         User user = userRepository.findByUsername(principal.getName());
-        requestTest.setUser(user);
-        Test test = testRepository.save(requestTest);
-        requestTest.getQuestions().forEach(question -> question.setTest(test));
+        test.setUser(user);
+        testRepository.save(test);
         questionRepository.saveAll(test.getQuestions());
         return test.getId();
     }
@@ -71,6 +70,7 @@ public class TestService {
 
     @Transactional
     public Test delete(Long id) {
+        // TODO: Переписать с CASCADE, попробовать удалить аннотацию Transactional
         Test test = getById(id);
         List<Question> questions = questionRepository.findAllByTest(test);
         questions.forEach(questionResultRepository::deleteAllByQuestion);
@@ -84,6 +84,11 @@ public class TestService {
         Test test = getById(id);
         User user = userRepository.findByUsername(principal.getName());
         TestResult testResult = testResultRepository.findByUserAndTest(user, test);
+
+        if (testResult == null) {
+            throw new TestNotStartedException(id);
+        }
+
         long score = 0L;
 
         for (Question question : test.getQuestions()) {

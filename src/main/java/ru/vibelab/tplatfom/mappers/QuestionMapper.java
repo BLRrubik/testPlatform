@@ -4,8 +4,8 @@ import ru.vibelab.tplatfom.DTO.question.QuestionDTO;
 import ru.vibelab.tplatfom.DTO.question.QuestionResultDTO;
 import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.domain.QuestionResult;
-import ru.vibelab.tplatfom.requests.BundledQuestionRequest;
-import ru.vibelab.tplatfom.requests.QuestionRequest;
+import ru.vibelab.tplatfom.requests.question.BundledQuestionRequest;
+import ru.vibelab.tplatfom.requests.question.QuestionRequest;
 
 import java.util.List;
 import java.util.Set;

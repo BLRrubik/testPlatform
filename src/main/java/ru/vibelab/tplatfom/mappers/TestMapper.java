@@ -3,10 +3,8 @@ package ru.vibelab.tplatfom.mappers;
 import ru.vibelab.tplatfom.DTO.test.TestShortDTO;
 import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.domain.Test;
-import ru.vibelab.tplatfom.domain.User;
-import ru.vibelab.tplatfom.requests.TestRequest;
+import ru.vibelab.tplatfom.requests.test.TestRequest;
 import ru.vibelab.tplatfom.DTO.test.TestDTO;
-import ru.vibelab.tplatfom.domain.Test;
 
 import java.util.Set;
 import java.util.List;
@@ -19,6 +17,7 @@ public class TestMapper {
         Set<Question> questions = request.getQuestions().stream()
                 .map(QuestionMapper::fromRequestToQuestion)
                 .collect(Collectors.toSet());
+        questions.forEach(question -> question.setTest(test));
         test.setQuestions(questions);
         return test;
     }

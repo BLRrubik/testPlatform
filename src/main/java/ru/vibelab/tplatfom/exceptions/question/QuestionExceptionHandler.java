@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class QuestionExceptionHandler {
     @ExceptionHandler(value = QuestionNotFoundException.class)
-    public ResponseEntity<ExceptionDTO> userNotFound(QuestionNotFoundException e) {
+    public ResponseEntity<ExceptionDTO> questionNotFound(QuestionNotFoundException e) {
         return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()), HttpStatus.NOT_FOUND);
     }
 }

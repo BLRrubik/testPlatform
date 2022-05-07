@@ -1,9 +1,6 @@
 package ru.vibelab.tplatfom.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.vibelab.tplatfom.DTO.auth.AuthDTO;
@@ -13,30 +10,26 @@ import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.user.UserDTO;
 import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
 import ru.vibelab.tplatfom.domain.Role;
-import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
 import ru.vibelab.tplatfom.domain.User;
 import ru.vibelab.tplatfom.exceptions.auth.UsernameExistsException;
 import ru.vibelab.tplatfom.exceptions.role.RoleNotFoundException;
 import ru.vibelab.tplatfom.exceptions.user.UserNotFoundException;
-import ru.vibelab.tplatfom.mappers.RoleMapper;
 import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.mappers.TestResultMapper;
 import ru.vibelab.tplatfom.mappers.UserMapper;
 import ru.vibelab.tplatfom.repos.RoleRepository;
 import ru.vibelab.tplatfom.repos.UserRepository;
-import ru.vibelab.tplatfom.requests.RoleUpdateRequest;
-import ru.vibelab.tplatfom.requests.UpdateTestRequest;
-import ru.vibelab.tplatfom.requests.UserDeleteRequest;
-import ru.vibelab.tplatfom.requests.UserUpdateByAdminRequest;
-import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 import ru.vibelab.tplatfom.requests.auth.AuthRequest;
 import ru.vibelab.tplatfom.requests.auth.RegistrationRequest;
+import ru.vibelab.tplatfom.requests.user.RoleUpdateRequest;
+import ru.vibelab.tplatfom.requests.user.UserDeleteRequest;
+import ru.vibelab.tplatfom.requests.user.UserUpdateByAdminRequest;
+import ru.vibelab.tplatfom.requests.user.UserUpdateRequest;
 import ru.vibelab.tplatfom.security.JwtProvider;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Service

@@ -44,7 +44,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<QuestionResult> questionResults;
 
-
     public void addRole(Role role) {
         roles.add(role);
     }

@@ -1,4 +1,4 @@
-package ru.vibelab.tplatfom.requests;
+package ru.vibelab.tplatfom.requests.question;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,13 +11,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionRequest {
+public class QuestionAnswerRequest {
     @NotNull
-    private Long test;
-    @NotNull
-    private String name;
-    @NotNull
-    private String description;
-    @NotNull
-    private String solution;
+    private String answer;
 }

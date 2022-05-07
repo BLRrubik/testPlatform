@@ -1,9 +1,10 @@
-package ru.vibelab.tplatfom.requests;
+package ru.vibelab.tplatfom.requests.test;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.vibelab.tplatfom.requests.question.BundledQuestionRequest;
 
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -17,5 +18,6 @@ public class TestRequest {
     private String name;
     @NotNull
     private String user;
+    @NotNull
     private Set<BundledQuestionRequest> questions;
 }

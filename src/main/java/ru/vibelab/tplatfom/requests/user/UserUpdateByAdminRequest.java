@@ -1,8 +1,7 @@
-package ru.vibelab.tplatfom.requests;
+package ru.vibelab.tplatfom.requests.user;
 
 import lombok.*;
 
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
@@ -10,9 +9,11 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserUpdateRequest {
+public class UserUpdateByAdminRequest {
     @NotNull
     private String username;
     @NotNull
     private String password;
+    @NotNull
+    private Set<RoleUpdateRequest> roles;
 }

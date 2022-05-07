@@ -14,8 +14,8 @@ import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
 import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.mappers.TestResultMapper;
-import ru.vibelab.tplatfom.requests.TestRequest;
-import ru.vibelab.tplatfom.requests.UpdateTestRequest;
+import ru.vibelab.tplatfom.requests.test.TestRequest;
+import ru.vibelab.tplatfom.requests.test.UpdateTestRequest;
 import ru.vibelab.tplatfom.services.QuestionService;
 import ru.vibelab.tplatfom.services.TestService;
 

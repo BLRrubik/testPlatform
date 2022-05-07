@@ -6,12 +6,13 @@ import org.springframework.stereotype.Service;
 import ru.vibelab.tplatfom.DTO.question.QuestionDTO;
 import ru.vibelab.tplatfom.domain.*;
 import ru.vibelab.tplatfom.exceptions.question.QuestionNotFoundException;
+import ru.vibelab.tplatfom.exceptions.test.TestFinishedException;
 import ru.vibelab.tplatfom.exceptions.test.TestNotFoundException;
 import ru.vibelab.tplatfom.mappers.QuestionMapper;
 import ru.vibelab.tplatfom.repos.*;
-import ru.vibelab.tplatfom.requests.BundledQuestionRequest;
-import ru.vibelab.tplatfom.requests.QuestionAnswerRequest;
-import ru.vibelab.tplatfom.requests.QuestionRequest;
+import ru.vibelab.tplatfom.requests.question.BundledQuestionRequest;
+import ru.vibelab.tplatfom.requests.question.QuestionAnswerRequest;
+import ru.vibelab.tplatfom.requests.question.QuestionRequest;
 
 import java.security.Principal;
 import java.util.List;
@@ -80,27 +81,45 @@ public class QuestionService {
         Test test = question.getTest();
         User user = userRepository.findByUsername(principal.getName());
 
-        if (!testResultRepository.hasUserActiveTest(test, user)) {
-            TestResult result = new TestResult();
-            result.setScore(0L);
-            result.setFinished(false);
-            result.setUser(user);
-            result.setTest(test);
-            testResultRepository.save(result);
+        TestResult testResult = null;
+
+        for (TestResult tempResult : user.getTestResults()) {
+            if (tempResult.getTest() == test) {
+                if (tempResult.getFinished()) {
+                    throw new TestFinishedException(test.getId());
+                } else {
+                    testResult = tempResult;
+                    break;
+                }
+            }
         }
 
-        QuestionResult result;
-
-        if (questionResultRepository.existsByQuestionAndUser(question, user)) {
-            result = questionResultRepository.getById(id);
-        } else {
-            result = new QuestionResult();
-            result.setQuestion(question);
-            result.setUser(user);
+        if (testResult == null) {
+            testResult = new TestResult();
+            testResult.setScore(0L);
+            testResult.setFinished(false);
+            testResult.setUser(user);
+            testResult.setTest(test);
+            testResultRepository.save(testResult);
         }
 
-        result.setAnswer(request.getAnswer());
-        result.setRight(request.getAnswer().equals(question.getSolution()));
-        questionResultRepository.save(result);
+        QuestionResult questionResult = null;
+
+        for (QuestionResult tempResult : user.getQuestionResults()) {
+            if (tempResult.getQuestion() == question) {
+                questionResult = tempResult;
+                break;
+            }
+        }
+
+        if (questionResult == null) {
+            questionResult = new QuestionResult();
+            questionResult.setQuestion(question);
+            questionResult.setUser(user);
+        }
+
+        questionResult.setAnswer(request.getAnswer());
+        questionResult.setRight(request.getAnswer().equals(question.getSolution()));
+        questionResultRepository.save(questionResult);
     }
 }

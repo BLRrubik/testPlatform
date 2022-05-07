@@ -8,9 +8,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vibelab.tplatfom.DTO.question.QuestionDTO;
 import ru.vibelab.tplatfom.domain.Question;
-import ru.vibelab.tplatfom.requests.BundledQuestionRequest;
-import ru.vibelab.tplatfom.requests.QuestionAnswerRequest;
-import ru.vibelab.tplatfom.requests.QuestionRequest;
+import ru.vibelab.tplatfom.requests.question.BundledQuestionRequest;
+import ru.vibelab.tplatfom.requests.question.QuestionAnswerRequest;
+import ru.vibelab.tplatfom.requests.question.QuestionRequest;
 import ru.vibelab.tplatfom.services.QuestionService;
 
 import javax.validation.Valid;
@@ -27,7 +27,9 @@ public class QuestionController {
 
     @PostMapping()
     @PreAuthorize("hasAuthority('Teacher')")
-    public ResponseEntity<String> createQuestion(@RequestBody @Valid QuestionRequest request) throws URISyntaxException {
+    public ResponseEntity<String> createQuestion(
+            @RequestBody @Valid QuestionRequest request
+    ) throws URISyntaxException {
         Long id = questionService.create(request);
         return ResponseEntity.created(new URI(String.format("/api/quest/%d", id))).build();
     }

@@ -8,8 +8,6 @@ import ru.vibelab.tplatfom.domain.User;
 
 @Repository
 public interface QuestionResultRepository extends JpaRepository<QuestionResult, Long> {
-    boolean existsByQuestionAndUser(Question question, User user);
-
     void deleteAllByQuestion(Question question);
 
     QuestionResult findByQuestionAndUser(Question question, User user);
