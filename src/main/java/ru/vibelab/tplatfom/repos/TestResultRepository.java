@@ -12,7 +12,7 @@ import java.util.List;
 public interface TestResultRepository extends JpaRepository<TestResult, Long> {
     List<TestResult> findAllByTest(Test test);
 
-    List<TestResult> findAllByUser(User user);
-
     void deleteAllByTest(Test test);
+
+    TestResult findByUserAndTest(User user, Test test);
 }

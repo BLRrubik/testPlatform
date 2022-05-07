@@ -4,20 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.vibelab.tplatfom.DTO.question.QuestionDTO;
-import ru.vibelab.tplatfom.domain.Question;
-import ru.vibelab.tplatfom.domain.QuestionResult;
-import ru.vibelab.tplatfom.domain.Test;
-import ru.vibelab.tplatfom.domain.User;
+import ru.vibelab.tplatfom.domain.*;
 import ru.vibelab.tplatfom.exceptions.question.QuestionNotFoundException;
+import ru.vibelab.tplatfom.exceptions.test.TestFinishedException;
 import ru.vibelab.tplatfom.exceptions.test.TestNotFoundException;
 import ru.vibelab.tplatfom.mappers.QuestionMapper;
-import ru.vibelab.tplatfom.repos.QuestionRepository;
-import ru.vibelab.tplatfom.repos.QuestionResultRepository;
-import ru.vibelab.tplatfom.repos.TestRepository;
-import ru.vibelab.tplatfom.repos.UserRepository;
-import ru.vibelab.tplatfom.requests.QuestionAnswerRequest;
-import ru.vibelab.tplatfom.requests.QuestionRequest;
+import ru.vibelab.tplatfom.repos.*;
+import ru.vibelab.tplatfom.requests.question.BundledQuestionRequest;
+import ru.vibelab.tplatfom.requests.question.QuestionAnswerRequest;
+import ru.vibelab.tplatfom.requests.question.QuestionRequest;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +23,8 @@ import java.util.stream.Collectors;
 public class QuestionService {
     @Autowired
     private final TestRepository testRepository;
+
+    @Autowired final TestResultRepository testResultRepository;
 
     @Autowired
     private final QuestionRepository questionRepository;
@@ -64,30 +63,62 @@ public class QuestionService {
 
     public QuestionDTO delete(Long id) {
         Question question = getById(id);
-        questionResultRepository.deleteAllByQuestion(question);
         questionRepository.delete(question);
         return QuestionMapper.fromQuestionToDto(question);
     }
 
-    public void answerQuestion(Long id, QuestionAnswerRequest request) {
-        Question question = getById(id);
-        QuestionResult result = new QuestionResult();
-        result.setQuestion(question);
-        result.setAnswer(request.getAnswer());
-        result.setRight(request.getAnswer().equals(question.getSolution()));
-
-        // TODO: Устанавливать User
-        User user = userRepository.findById(1L).orElse(null);
-        result.setUser(user);
-
-        questionResultRepository.save(result);
-    }
-
-    public Question updateQuestion(Long questionId, QuestionRequest request) {
+    public QuestionDTO updateQuestion(Long questionId, BundledQuestionRequest request) {
         Question question = getById(questionId);
         question.setName(request.getName());
         question.setDescription(request.getDescription());
         question.setSolution(request.getSolution());
-        return questionRepository.save(question);
+        return QuestionMapper.fromQuestionToDto(questionRepository.save(question));
+    }
+
+    public void answerQuestion(Long id, QuestionAnswerRequest request, Principal principal) {
+        Question question = getById(id);
+        Test test = question.getTest();
+        User user = userRepository.findByUsername(principal.getName());
+
+        TestResult testResult = null;
+
+        for (TestResult tempResult : user.getTestResults()) {
+            if (tempResult.getTest() == test) {
+                if (tempResult.getFinished()) {
+                    throw new TestFinishedException(test.getId());
+                } else {
+                    testResult = tempResult;
+                    break;
+                }
+            }
+        }
+
+        if (testResult == null) {
+            testResult = new TestResult();
+            testResult.setScore(0L);
+            testResult.setFinished(false);
+            testResult.setUser(user);
+            testResult.setTest(test);
+            testResultRepository.save(testResult);
+        }
+
+        QuestionResult questionResult = null;
+
+        for (QuestionResult tempResult : user.getQuestionResults()) {
+            if (tempResult.getQuestion() == question) {
+                questionResult = tempResult;
+                break;
+            }
+        }
+
+        if (questionResult == null) {
+            questionResult = new QuestionResult();
+            questionResult.setQuestion(question);
+            questionResult.setUser(user);
+        }
+
+        questionResult.setAnswer(request.getAnswer());
+        questionResult.setRight(request.getAnswer().equals(question.getSolution()));
+        questionResultRepository.save(questionResult);
     }
 }

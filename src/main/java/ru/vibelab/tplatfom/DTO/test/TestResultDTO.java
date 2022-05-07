@@ -13,6 +13,7 @@ import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
 public class TestResultDTO {
     private Long id;
     private Long score;
+    private Boolean finished;
     private TestShortDTO test;
     private UserShortDTO user;
 }

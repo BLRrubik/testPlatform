@@ -3,18 +3,19 @@ package ru.vibelab.tplatfom.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ru.vibelab.tplatfom.DTO.test.TestDTO;
 import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.test.TestShortDTO;
-import ru.vibelab.tplatfom.domain.Question;
-import ru.vibelab.tplatfom.domain.Test;
+import ru.vibelab.tplatfom.domain.*;
 import ru.vibelab.tplatfom.exceptions.test.TestNotFoundException;
+import ru.vibelab.tplatfom.exceptions.test.TestNotStartedException;
 import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.mappers.TestResultMapper;
 import ru.vibelab.tplatfom.repos.*;
-import ru.vibelab.tplatfom.requests.TestRequest;
-import ru.vibelab.tplatfom.requests.UpdateTestRequest;
+import ru.vibelab.tplatfom.requests.test.TestRequest;
+import ru.vibelab.tplatfom.requests.test.UpdateTestRequest;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,14 +53,11 @@ public class TestService {
                 .collect(Collectors.toList());
     }
 
-    public Long create(TestRequest request) {
-        Test requestTest = TestMapper.fromRequestToTest(request);
-
-        requestTest.setUser(userRepository.findById(1L).orElse(null));
-        // TODO: Заменить на пользователя
-
-        Test test = testRepository.save(requestTest);
-        requestTest.getQuestions().forEach(item -> item.setTest(test));
+    public Long create(TestRequest request, Principal principal) {
+        Test test = TestMapper.fromRequestToTest(request);
+        User user = userRepository.findByUsername(principal.getName());
+        test.setUser(user);
+        testRepository.save(test);
         questionRepository.saveAll(test.getQuestions());
         return test.getId();
     }
@@ -70,14 +68,33 @@ public class TestService {
         testRepository.save(test);
     }
 
-    @Transactional
-    public Test delete(Long id) {
+    public TestDTO delete(Long id) {
         Test test = getById(id);
-        List<Question> questions = questionRepository.findAllByTest(test);
-        questions.forEach(questionResultRepository::deleteAllByQuestion);
-        questionRepository.deleteAllByTest(test);
-        testResultRepository.deleteAllByTest(test);
         testRepository.delete(test);
-        return test;
+        return TestMapper.fromTestToDTO(test);
+    }
+
+    public TestResult finish(Long id, Principal principal) {
+        Test test = getById(id);
+        User user = userRepository.findByUsername(principal.getName());
+        TestResult testResult = testResultRepository.findByUserAndTest(user, test);
+
+        if (testResult == null) {
+            throw new TestNotStartedException(id);
+        }
+
+        long score = 0L;
+
+        for (Question question : test.getQuestions()) {
+            QuestionResult questionResult = questionResultRepository.findByQuestionAndUser(question, user);
+            if (questionResult != null && questionResult.getRight()) {
+                score++;
+            }
+        }
+
+        testResult.setFinished(true);
+        testResult.setScore(score);
+        testResultRepository.save(testResult);
+        return testResult;
     }
 }

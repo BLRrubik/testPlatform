@@ -1,4 +1,4 @@
-package ru.vibelab.tplatfom.requests;
+package ru.vibelab.tplatfom.requests.test;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

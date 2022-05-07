@@ -22,6 +22,9 @@ public class TestResult {
     @Column(name = "score")
     private Long score;
 
+    @Column(name = "finished")
+    private Boolean finished;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

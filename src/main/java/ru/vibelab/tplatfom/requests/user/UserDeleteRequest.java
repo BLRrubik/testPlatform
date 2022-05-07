@@ -1,4 +1,4 @@
-package ru.vibelab.tplatfom.requests;
+package ru.vibelab.tplatfom.requests.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionAnswerRequest {
-    private String answer;
+public class UserDeleteRequest {
+    @NotNull
+    private Long id;
 }

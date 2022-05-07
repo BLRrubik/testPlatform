@@ -14,4 +14,14 @@ public class TestExceptionHandler {
     public ResponseEntity<ExceptionDTO> userNotFound(TestNotFoundException e) {
         return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = TestFinishedException.class)
+    public ResponseEntity<ExceptionDTO> testFinished(TestFinishedException e) {
+        return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = TestNotStartedException.class)
+    public ResponseEntity<ExceptionDTO> testNotStarted(TestNotStartedException e) {
+        return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()), HttpStatus.BAD_REQUEST);
+    }
 }

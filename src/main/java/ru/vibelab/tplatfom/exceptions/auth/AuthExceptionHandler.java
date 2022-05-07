@@ -15,7 +15,6 @@ public class AuthExceptionHandler {
         return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()), HttpStatus.UNAUTHORIZED);
     }
 
-
     @ExceptionHandler(value = UsernameExistsException.class)
     public ResponseEntity<ExceptionDTO> userIsExists(UsernameExistsException e) {
         return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()), HttpStatus.UNAUTHORIZED);

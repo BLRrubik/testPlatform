@@ -4,13 +4,22 @@ import ru.vibelab.tplatfom.DTO.question.QuestionDTO;
 import ru.vibelab.tplatfom.DTO.question.QuestionResultDTO;
 import ru.vibelab.tplatfom.domain.Question;
 import ru.vibelab.tplatfom.domain.QuestionResult;
-import ru.vibelab.tplatfom.requests.QuestionRequest;
+import ru.vibelab.tplatfom.requests.question.BundledQuestionRequest;
+import ru.vibelab.tplatfom.requests.question.QuestionRequest;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class QuestionMapper {
+    public static Question fromRequestToQuestion(BundledQuestionRequest request) {
+        Question question = new Question();
+        question.setName(request.getName());
+        question.setDescription(request.getDescription());
+        question.setSolution(request.getSolution());
+        return question;
+    }
+
     public static Question fromRequestToQuestion(QuestionRequest request) {
         Question question = new Question();
         question.setName(request.getName());

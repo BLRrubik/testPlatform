@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class TestResultMapper {
     public static TestResultDTO fromTestResultToDTO(TestResult testResult) {
         return new TestResultDTO(testResult.getId(),
-                testResult.getScore(),
+                testResult.getScore(), testResult.getFinished(),
                 TestMapper.fromTestToShortDto(testResult.getTest()),
                 UserMapper.fromUserToShortDTO(testResult.getUser())
         );
