@@ -9,10 +9,13 @@ import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.user.UserDTO;
 import ru.vibelab.tplatfom.DTO.user.UserShortDTO;
 import ru.vibelab.tplatfom.domain.User;
+import ru.vibelab.tplatfom.exceptions.auth.UnauthorizedException;
 import ru.vibelab.tplatfom.requests.UserDeleteRequest;
+import ru.vibelab.tplatfom.requests.UserUpdateByAdminRequest;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 import ru.vibelab.tplatfom.services.UserService;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -30,39 +33,59 @@ public class UserController {
         return ResponseEntity.of(Optional.of(userService.getAllUsers()));
     }
 
+    @PreAuthorize("hasAuthority('Admin') or hasAuthority('Teacher')")
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(userService.getUser(id)));
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @PostMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUserByAdmin(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
-        return ResponseEntity.of(Optional.of(userService.updateUser(id, request)));
+    public ResponseEntity<UserDTO> updateUserByAdmin(@PathVariable Long id, @RequestBody @Valid UserUpdateByAdminRequest request) {
+        return ResponseEntity.of(Optional.of(userService.updateUserByAdmin(id, request)));
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping
-    public void deleteUser(@RequestBody UserDeleteRequest request) {
+    public void deleteUser(@RequestBody @Valid UserDeleteRequest request) {
         userService.deleteUser(request);
     }
 
+
     @GetMapping("/profile")
     public ResponseEntity<UserDTO> getProfile(Principal principal) {
+        if (principal == null) {
+            throw new UnauthorizedException();
+        }
         return ResponseEntity.of(Optional.of(userService.getProfile(principal)));
     }
 
     @PostMapping("/profile/edit")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserUpdateRequest request, Principal principal) {
+    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserUpdateRequest request, Principal principal) {
+        if (principal == null) {
+            throw new UnauthorizedException();
+        }
         return ResponseEntity.of(Optional.of(userService.updateUtil(principal, request)));
     }
+//    По факту ненужные эндпоинты так как всю это информацию можно получить по /api/user/{id} (GET)
+//
+//    @PreAuthorize("hasAuthority('Teacher')")
+//    @GetMapping("/test/")
+//    public ResponseEntity<List<TestDTO>> getUserTests(Principal principal) {
+//        return ResponseEntity.of(Optional.of(userService.getUserTests(principal)));
+//    }
 
-    //waiting for authorization
-    @GetMapping("/test/{id}")
-    public ResponseEntity<List<TestDTO>> getUserTests(@PathVariable Long id) {
-        return ResponseEntity.of(Optional.of(userService.getUserTests(id)));
-    }
+//    @PreAuthorize("hasAuthority('Teacher')")
+//    @GetMapping("/{id}/testresults")
+//    public ResponseEntity<List<TestResultDTO>> getUserResultsByTeacher(@PathVariable Long id) {
+//        return ResponseEntity.of(Optional.of(userService.getUserResults(id)));
+//    }
 
-    @GetMapping("/{id}/testresult")
-    public ResponseEntity<List<TestResultDTO>> getUserResults(@PathVariable Long id) {
-        return ResponseEntity.of(Optional.of(userService.getUserResults(id)));
-    }
+//    @GetMapping("/testresults")
+//    public ResponseEntity<List<TestResultDTO>> getUserResults(Principal principal) {
+//        if (principal == null) {
+//            throw new UnauthorizedException();
+//        }
+//        return ResponseEntity.of(Optional.of(userService.getUserResults(principal)));
+//    }
 }

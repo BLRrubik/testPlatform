@@ -16,15 +16,19 @@ import ru.vibelab.tplatfom.domain.Role;
 import ru.vibelab.tplatfom.domain.Test;
 import ru.vibelab.tplatfom.domain.TestResult;
 import ru.vibelab.tplatfom.domain.User;
+import ru.vibelab.tplatfom.exceptions.auth.UsernameExistsException;
 import ru.vibelab.tplatfom.exceptions.role.RoleNotFoundException;
 import ru.vibelab.tplatfom.exceptions.user.UserNotFoundException;
+import ru.vibelab.tplatfom.mappers.RoleMapper;
 import ru.vibelab.tplatfom.mappers.TestMapper;
 import ru.vibelab.tplatfom.mappers.TestResultMapper;
 import ru.vibelab.tplatfom.mappers.UserMapper;
 import ru.vibelab.tplatfom.repos.RoleRepository;
 import ru.vibelab.tplatfom.repos.UserRepository;
+import ru.vibelab.tplatfom.requests.RoleUpdateRequest;
 import ru.vibelab.tplatfom.requests.UpdateTestRequest;
 import ru.vibelab.tplatfom.requests.UserDeleteRequest;
+import ru.vibelab.tplatfom.requests.UserUpdateByAdminRequest;
 import ru.vibelab.tplatfom.requests.UserUpdateRequest;
 import ru.vibelab.tplatfom.requests.auth.AuthRequest;
 import ru.vibelab.tplatfom.requests.auth.RegistrationRequest;
@@ -52,14 +56,14 @@ public class UserService {
     public AuthDTO authUser(AuthRequest request) {
         User user = userRepo.findByUsername(request.getUsername());
 
+        if (user == null) {
+            throw new UserNotFoundException("Username is invalid");
 
-//        if (user == null) {
-//            return new AuthDTO("Login is not correct");
-//        }
-//
-//        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//            return new AuthDTO("Password is not correct");
-//        }
+        }
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new UserNotFoundException("Password is invalid");
+        }
 
         System.out.println(user.getRoles());
         String token = jwtProvider.generateToken(user.getUsername());
@@ -72,7 +76,7 @@ public class UserService {
         boolean isExists = userRepo.findByUsername(registrationRequest.getUsername()) != null;
 
         if (isExists) {
-            return new RegistrationDTO("Login is already taken");
+            throw new UsernameExistsException("Username is already taken");
         }
 
         Role role = roleRepository.findByName("Student");
@@ -99,12 +103,20 @@ public class UserService {
         return UserMapper.fromUserToDTO(userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id)));
     }
 
-
     public UserDTO updateUser(Long id, UserUpdateRequest request) {
+        User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+        userRepo.save(user);
+        return UserMapper.fromUserToDTO(user);
+    }
+
+    public UserDTO updateUserByAdmin(Long id, UserUpdateByAdminRequest request) {
         User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
+
 
         request.getRoles()
                 .forEach((role -> {
@@ -113,7 +125,12 @@ public class UserService {
                     }
                 }));
 
-        user.setRoles(request.getRoles());
+
+        for (RoleUpdateRequest role : request.getRoles()) {
+            Role role_entity = roleRepository.findByName(role.getName());
+            user.addRole(role_entity);
+            role_entity.addUser(user);
+        }
 
         userRepo.save(user);
 
@@ -125,11 +142,14 @@ public class UserService {
                 () -> new UserNotFoundException(request.getId())));
     }
 
-    public List<TestDTO> getUserTests(Long id) {
-        List<Test> tests = List.copyOf(userRepo.findById(id).orElseThrow(
-                () -> new UserNotFoundException(id)).getTests());
+    public List<TestDTO> getUserTests(Principal principal) {
+        User user = userRepo.findByUsername(principal.getName());
 
-        return TestMapper.fromTestsToDTOs(tests);
+        if (user == null) {
+            throw new UserNotFoundException("User is incorrect");
+        }
+
+        return TestMapper.fromTestsToDTOs(List.copyOf(user.getTests()));
     }
 
     public List<TestResultDTO> getUserResults(Long id) {
@@ -138,6 +158,16 @@ public class UserService {
         ).getTestResults());
 
         return TestResultMapper.fromTestsResultsToDTOs(results);
+    }
+
+    public List<TestResultDTO> getUserResults(Principal principal) {
+        User user = userRepo.findByUsername(principal.getName());
+
+        if (user == null) {
+            throw new UserNotFoundException("User is incorrect");
+        }
+
+        return TestResultMapper.fromTestsResultsToDTOs(List.copyOf(user.getTestResults()));
     }
 
     public UserDTO getProfile(Principal principal) {

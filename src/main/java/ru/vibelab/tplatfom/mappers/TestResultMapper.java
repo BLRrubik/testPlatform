@@ -1,6 +1,7 @@
 package ru.vibelab.tplatfom.mappers;
 
 import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
+import ru.vibelab.tplatfom.DTO.test.TestResultShortDTO;
 import ru.vibelab.tplatfom.domain.TestResult;
 
 import java.util.List;
@@ -20,6 +21,21 @@ public class TestResultMapper {
                 .map(TestResultMapper::fromTestResultToDTO)
                 .collect(Collectors.toList());
     }
+
+    public static TestResultShortDTO fromTestResultToShortDTO(TestResult testResult) {
+        return new TestResultShortDTO(testResult.getId(),
+                testResult.getScore(),
+                TestMapper.fromTestToShortDto(testResult.getTest())
+        );
+    }
+
+    public static List<TestResultShortDTO> fromTestsResultsToShortDTOs(List<TestResult> testResults) {
+        return testResults.stream()
+                .map(TestResultMapper::fromTestResultToShortDTO)
+                .collect(Collectors.toList());
+    }
+
+
 
     /*
     public static TestResult fromDTOToTestResult(TestResultDTO testResultDTO) {

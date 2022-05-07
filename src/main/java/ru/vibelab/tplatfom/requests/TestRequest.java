@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Getter
@@ -12,6 +13,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TestRequest {
+    @NotNull
     private String name;
+    @NotNull
+    private String user;
     private Set<BundledQuestionRequest> questions;
 }

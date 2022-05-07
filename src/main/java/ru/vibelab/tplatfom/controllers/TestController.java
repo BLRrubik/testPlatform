@@ -19,6 +19,7 @@ import ru.vibelab.tplatfom.requests.UpdateTestRequest;
 import ru.vibelab.tplatfom.services.QuestionService;
 import ru.vibelab.tplatfom.services.TestService;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -44,7 +45,7 @@ public class TestController {
     @PostMapping
     @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<String> createTest(
-            @RequestBody TestRequest request, Principal principal
+            @RequestBody @Valid TestRequest request, Principal principal
     ) throws URISyntaxException {
         Long id = testService.create(request, principal);
         return ResponseEntity.created(new URI(String.format("/api/test/%d", id))).build();
@@ -60,7 +61,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<String> updateTest(
             @PathVariable(name = "id") Long id,
-            @RequestBody UpdateTestRequest request
+            @RequestBody @Valid UpdateTestRequest request
     ) {
         testService.updateTest(id, request);
         return ResponseEntity.noContent().build();
