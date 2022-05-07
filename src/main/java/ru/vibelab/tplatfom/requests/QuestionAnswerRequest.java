@@ -12,5 +12,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionAnswerRequest {
+    @NotNull
     private String answer;
 }

@@ -54,7 +54,7 @@ public class QuestionService {
     }
 
     public Long create(QuestionRequest request) {
-        Test test = getTestById(request.getTestId());
+        Test test = getTestById(request.getTest());
         Question question = QuestionMapper.fromRequestToQuestion(request);
         question.setTest(test);
         return questionRepository.save(question).getId();
