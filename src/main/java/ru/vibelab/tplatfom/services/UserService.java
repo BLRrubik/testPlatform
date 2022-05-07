@@ -58,7 +58,6 @@ public class UserService {
             throw new UserNotFoundException("Password is invalid");
         }
 
-        System.out.println(user.getRoles());
         String token = jwtProvider.generateToken(user.getUsername());
         return new AuthDTO(user.getUsername(),
                 token,
@@ -108,8 +107,7 @@ public class UserService {
         User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
         user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         request.getRoles()
                 .forEach((role -> {

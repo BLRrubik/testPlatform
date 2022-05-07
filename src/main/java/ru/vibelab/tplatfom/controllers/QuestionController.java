@@ -49,11 +49,11 @@ public class QuestionController {
 
     @PostMapping("/{id}/edit")
     @PreAuthorize("hasAuthority('Teacher')")
-    public ResponseEntity<Question> updateQuestion(
+    public ResponseEntity<QuestionDTO> updateQuestion(
             @PathVariable(name = "id") Long id,
             @RequestBody @Valid BundledQuestionRequest request
     ) {
-        Question question = questionService.updateQuestion(id, request);
+        QuestionDTO question = questionService.updateQuestion(id, request);
         return new ResponseEntity<>(question, HttpStatus.OK);
     }
 

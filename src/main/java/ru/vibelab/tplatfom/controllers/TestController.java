@@ -70,8 +70,8 @@ public class TestController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('Teacher')")
     public ResponseEntity<TestDTO> deleteTest(@PathVariable(name = "id") Long id) {
-        Test test = testService.delete(id);
-        return new ResponseEntity<>(TestMapper.fromTestToDTO(test), HttpStatus.OK);
+        TestDTO test = testService.delete(id);
+        return new ResponseEntity<>(test, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/testresults")

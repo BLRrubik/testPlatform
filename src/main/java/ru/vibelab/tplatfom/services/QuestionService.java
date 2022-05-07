@@ -63,17 +63,16 @@ public class QuestionService {
 
     public QuestionDTO delete(Long id) {
         Question question = getById(id);
-        questionResultRepository.deleteAllByQuestion(question);
         questionRepository.delete(question);
         return QuestionMapper.fromQuestionToDto(question);
     }
 
-    public Question updateQuestion(Long questionId, BundledQuestionRequest request) {
+    public QuestionDTO updateQuestion(Long questionId, BundledQuestionRequest request) {
         Question question = getById(questionId);
         question.setName(request.getName());
         question.setDescription(request.getDescription());
         question.setSolution(request.getSolution());
-        return questionRepository.save(question);
+        return QuestionMapper.fromQuestionToDto(questionRepository.save(question));
     }
 
     public void answerQuestion(Long id, QuestionAnswerRequest request, Principal principal) {

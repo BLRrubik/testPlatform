@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vibelab.tplatfom.DTO.test.TestDTO;
 import ru.vibelab.tplatfom.DTO.test.TestResultDTO;
 import ru.vibelab.tplatfom.DTO.test.TestShortDTO;
 import ru.vibelab.tplatfom.domain.*;
@@ -68,16 +69,10 @@ public class TestService {
         testRepository.save(test);
     }
 
-    @Transactional
-    public Test delete(Long id) {
-        // TODO: Переписать с CASCADE, попробовать удалить аннотацию Transactional
+    public TestDTO delete(Long id) {
         Test test = getById(id);
-        List<Question> questions = questionRepository.findAllByTest(test);
-        questions.forEach(questionResultRepository::deleteAllByQuestion);
-        questionRepository.deleteAllByTest(test);
-        testResultRepository.deleteAllByTest(test);
         testRepository.delete(test);
-        return test;
+        return TestMapper.fromTestToDTO(test);
     }
 
     public TestResult finish(Long id, Principal principal) {

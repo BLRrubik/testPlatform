@@ -17,7 +17,5 @@ public class TestRequest {
     @NotNull
     private String name;
     @NotNull
-    private String user;
-    @NotNull
     private Set<BundledQuestionRequest> questions;
 }

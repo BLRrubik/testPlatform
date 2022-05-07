@@ -29,10 +29,10 @@ public class Test {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "test")
+    @OneToMany(mappedBy = "test", cascade = CascadeType.REMOVE)
     @Fetch(FetchMode.JOIN)
     private Set<Question> questions;
 
-    @OneToMany(mappedBy = "test")
+    @OneToMany(mappedBy = "test", cascade = CascadeType.REMOVE)
     private Set<TestResult> testResults;
 }
